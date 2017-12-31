@@ -1,6 +1,8 @@
 package com.example.abhishekkoranne.engineersbook;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.abhishekkoranne.engineersbook.Fragment.ArticlesFragment;
+import com.example.abhishekkoranne.engineersbook.model.Article;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Jiggy on 26-11-2017.
@@ -16,21 +28,14 @@ import com.example.abhishekkoranne.engineersbook.Fragment.ArticlesFragment;
 
 public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ArticlesViewHolder> {
     Context cont;
-    String[] user_name;
-    String[] time_stamp;
-    String[] text_post;
-    String[] no_of_comments;
-    String[] no_of_shares;
-    int[] images;
+    ArrayList<Article> articleList=new ArrayList<>();
+    DisplayImageOptions options;
+    ImageLoader imgloader=ImageLoader.getInstance();
 
-    public ArticlesAdapter(ArticlesFragment articlesFragment, int[] images, String[] user_name, String[] time_stamp, String[] text_data, String[] no_of_comments, String[] no_of_shares) {
-        cont = articlesFragment.getActivity();
-        this.images = images;
-        this.user_name = user_name;
-        this.time_stamp = time_stamp;
-        this.no_of_comments = no_of_comments;
-        this.no_of_shares = no_of_shares;
-        this.text_post = text_data;
+    public ArticlesAdapter(Context cont, ArrayList<Article> art) {
+        this.cont = cont;
+        this.articleList = art;
+        options= new DisplayImageOptions.Builder().build();
     }
 
     @Override
@@ -41,18 +46,69 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
     }
     @Override
     public void onBindViewHolder(ArticlesViewHolder holder, int position) {
-        holder.profile_pic.setImageResource(images[position]);
-        holder.image_post.setImageResource(images[position]);
-        holder.user_name.setText(user_name[position]);
-        holder.timestamp.setText(time_stamp[position]);
-        holder.text_post.setText(text_post[position]);
-        holder.no_of_comments.setText(no_of_comments[position]);
-        holder.no_of_shares.setText(no_of_shares[position]);
+        String userName=articleList.get(position).getUser().getFirstName().toString()+" "+articleList.get(position).getUser().getLastName().toString();
+        /*Date date=new Date(articleList.get(position).getTime());
+        SimpleDateFormat dateFormat=new SimpleDateFormat();*/
+
+        Date date = new Date(articleList.get(position).getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        String strDate= formatter.format(date);
+
+
+        imgloader.displayImage("https://goo.gl/images/4BDHri", holder.profile_pic, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+        });
+
+        imgloader.displayImage("https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1811310904%2Flogo100x100_SM_twitter_400x400.jpg&imgrefurl=https%3A%2F%2Ftwitter.com%2Fsomos100x100&docid=ZK72S9aXTiELUM&tbnid=-1E2q0TplBkcCM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA..i&w=400&h=400&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA&iact=mrc&uact=8", holder.image_post, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+        });
+//        holder.image_post.setImageResource(images[position]);
+        holder.user_name.setText(userName);
+        holder.timestamp.setText(strDate);
+        holder.text_post.setText(""+articleList.get(position).getArticle_text_post());
+        holder.no_of_comments.setText(""+articleList.get(position).getComments());
+        holder.no_of_shares.setText(""+articleList.get(position).getShares());
     }
 
     @Override
     public int getItemCount() {
-        return images.length;
+        return articleList.size();
     }
 
     public class ArticlesViewHolder extends RecyclerView.ViewHolder {
@@ -68,6 +124,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
             text_post = (TextView) itemView.findViewById(R.id.text_post);
             no_of_comments = (TextView) itemView.findViewById(R.id.no_of_comments);
             no_of_shares = (TextView) itemView.findViewById(R.id.no_of_shares);
+
         }
     }
 }
