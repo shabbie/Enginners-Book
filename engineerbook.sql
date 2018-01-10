@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 10, 2018 at 07:42 AM
+-- Generation Time: Jan 10, 2018 at 09:06 AM
 -- Server version: 5.7.19
 -- PHP Version: 5.6.31
 
@@ -112,8 +112,7 @@ CREATE TABLE IF NOT EXISTS `company` (
 
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE IF NOT EXISTS `department` (
-  `dept_id` int(2) NOT NULL COMMENT '5 is std length of dept',
-  `user_id` varchar(10) NOT NULL,
+  `dept_id` int(2) NOT NULL COMMENT '2 is std length of dept',
   `dept_name` text NOT NULL,
   `hod_name` text NOT NULL,
   `placements` int(3) NOT NULL DEFAULT '0',
@@ -125,8 +124,8 @@ CREATE TABLE IF NOT EXISTS `department` (
 -- Dumping data for table `department`
 --
 
-INSERT INTO `department` (`dept_id`, `user_id`, `dept_name`, `hod_name`, `placements`, `colg_id`) VALUES
-(7, '1', 'computer', 'bijal mam', 0, 41);
+INSERT INTO `department` (`dept_id`, `dept_name`, `hod_name`, `placements`, `colg_id`) VALUES
+(7, 'computer', 'bijal mam', 0, 41);
 
 -- --------------------------------------------------------
 
@@ -140,7 +139,8 @@ CREATE TABLE IF NOT EXISTS `faculty` (
   `user_id` int(10) NOT NULL,
   `dept_id` int(2) NOT NULL,
   `colg_id` int(3) NOT NULL,
-  `ranking` int(3) NOT NULL
+  `ranking` int(3) NOT NULL,
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
