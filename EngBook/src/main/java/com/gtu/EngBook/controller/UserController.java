@@ -1,5 +1,7 @@
 package com.gtu.EngBook.controller;
 
+import com.gtu.EngBook.model.AddressModel;
+import com.gtu.EngBook.model.DepartmentModel;
 import com.gtu.EngBook.model.StudentModel;
 import com.gtu.EngBook.model.UserModel;
 import com.gtu.EngBook.service.UserService;
@@ -25,17 +27,19 @@ public class UserController
 	{
 		StudentModel studentModel=new StudentModel();
 		UserModel userModel=new UserModel();
-		studentModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
+		DepartmentModel departmentModel=new DepartmentModel();
 
+
+		studentModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
 		userModel.setFname(req.get("fname").toString());
 		userModel.setLname(req.get("lname").toString());
 		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
 		userModel.setDob((Date)(req.get("dob")));
-		String addr = req.get("addr").toString();
-		long contact = (long) req.get("fname");
-		String email = req.get("email").toString();
-		String dept = req.get("dept").toString();
-		String col = req.get("col").toString();
+		userModel.setAddress(req.get("addr").toString());
+		userModel.setContact((long) req.get("contact"));
+		userModel.setEmail(req.get("email").toString());
+		departmentModel.setDept_name(req.get("dept").toString());
+		req.get("col").toString();
 		String univ = req.get("univ").toString();
 		int yop= (int) req.get("yop");
 		String pass = req.get("pass").toString();

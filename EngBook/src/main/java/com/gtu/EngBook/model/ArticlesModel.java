@@ -31,6 +31,18 @@ public class ArticlesModel implements Serializable {
     @Column(name = "create_time")
     private long create_time;
 
+    public ArticlesModel(long user_id, long article_id, int article_type, String article_text, Blob article_image, long create_time) {
+        this.user_id = user_id;
+        this.article_id = article_id;
+        this.article_type = article_type;
+        this.article_text = article_text;
+        this.article_image = article_image;
+        this.create_time = create_time;
+    }
+
+    public ArticlesModel() {
+    }
+
 
     public long getUser_id() {
         return user_id;

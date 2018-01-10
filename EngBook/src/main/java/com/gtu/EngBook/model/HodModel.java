@@ -7,8 +7,8 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class StudentModel implements Serializable {
-
+public class HodModel implements Serializable
+{
     @Id
     @GeneratedValue
     @Column(name = "user_id")
@@ -23,24 +23,19 @@ public class StudentModel implements Serializable {
     @Column(name = "colg_id")
     private int colg_id;
 
-    @Column(name = "year_of_passing")
-    private int year_of_passing;
-
     @Column(name = "ranking")
     private int rank;
 
-    public StudentModel(long user_id, long enroll_no, int dept_id, int colg_id, int year_of_passing, int rank) {
+    public HodModel(long user_id, long enroll_no, int dept_id, int colg_id, int rank) {
         this.user_id = user_id;
         this.enroll_no = enroll_no;
         this.dept_id = dept_id;
         this.colg_id = colg_id;
-        this.year_of_passing = year_of_passing;
         this.rank = rank;
     }
 
-    public StudentModel() {
+    public HodModel() {
     }
-
 
     public long getUser_id() {
         return user_id;
@@ -72,14 +67,6 @@ public class StudentModel implements Serializable {
 
     public void setColg_id(int colg_id) {
         this.colg_id = colg_id;
-    }
-
-    public int getYear_of_passing() {
-        return year_of_passing;
-    }
-
-    public void setYear_of_passing(int year_of_passing) {
-        this.year_of_passing = year_of_passing;
     }
 
     public int getRank() {

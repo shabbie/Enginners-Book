@@ -15,8 +15,8 @@ public class UserModel implements Serializable {
     @Column(name = "user_id")
     private long user_id;
 
-    @Column(name = "Password")
-    private String Password;
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "login_status")
     private boolean login_status;
@@ -39,6 +39,29 @@ public class UserModel implements Serializable {
     @Column(name = "contact")
     private long contact;
 
+    @Column(name = "user_type")
+    private long user_type;
+
+    @Column(name = "address")
+    private String address;
+
+    public UserModel(long user_id, String password, boolean login_status, String fname, String lname, int gender, Date dob, String email, long contact, long user_type, String address) {
+        this.user_id = user_id;
+        this.password = password;
+        this.login_status = login_status;
+        this.fname = fname;
+        this.lname = lname;
+        this.gender = gender;
+        this.dob = dob;
+        this.email = email;
+        this.contact = contact;
+        this.user_type = user_type;
+        this.address = address;
+    }
+
+    public UserModel() {
+    }
+
     public long getUser_id() {
         return user_id;
     }
@@ -48,11 +71,11 @@ public class UserModel implements Serializable {
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public boolean isLogin_status() {
@@ -109,5 +132,21 @@ public class UserModel implements Serializable {
 
     public void setContact(long contact) {
         this.contact = contact;
+    }
+
+    public long getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(long user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
