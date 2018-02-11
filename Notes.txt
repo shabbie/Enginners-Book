@@ -1,0 +1,72 @@
+// CS50 Git Notes :===>
+
+Git Uses:- 
+1. Versioning the software
+2. Collaborating with others
+3. Deploying code(in cloud so to speak in this days)
+
+-> We learn es6 or Xmas script(latest of javascript) 
+
+Git Begins==>
+
+.It Keep track of changes like if we first create new file,then add new line of code, then remove some line of code...git will help us to track our code from begining...
+
+.It Synchronizes code between different people and makes sure that everyone has access to that code base...means softwares like git helps to create project by collabration between different people...
+
+.It helps to Test changes to do without losing the original.
+
+.It helps to Revert back old versions of code.
+
+Q. WHAT is GITHUB ?
+A. It is a website where all the git repositories are stored in internet.Used for collabration of diff. people to work on same project or to make accessible.
+
+*Soft to do html programming:= atom, vscode
+
+==> Command Line Interface for git that is to download the copy of project to our local pc.
+
+  0. git init: To initialize empty git repo on local pc
+  	 
+  	 touch hello.htm: To create empty new file on local pc
+
+  1. git clone <url> = It is to download the project from server(e.g. github) by copying the url on right side of SSH to clipboard...
+
+  2. Then add some file(e.g. html file) for instance and commit the changes to repository...
+     Cmd ==> git add hello.html means to include the file whenever next time i save the version of repository...
+
+  3. git commit -m "mssg / comments" ==>(commit means snapshot or save) it is to take the snapshot of repo...like to keep track of older version of code and to see your comments thenafter....
+
+  4. git status ==> tells us current status of our repo like whats going on in our repo at the given moment
+
+  5. git push ==> to push our changes from local pc to github i.e. to internet after making changes locally...
+
+  6. git pull ==> in order to download the latest version of repo/software from internet to local pc after someone has made some changes to repo...  
+
+  7. Merge Conflicts: I have added one line of code locally and remotely i.e. another person added diff line of code on same line in same file so git does't knows which line I had to include it is called merge conflicts i.e. autometic merge couldn't be done by git.
+
+  8. Git Log: To see the history of commits made in your repository
+
+  9. Git reset: 
+
+  		git reset --hard <commit(hash)> ==> to reset to any commit by their hash values(copy and paste only some values of commit hash)
+
+  		git reset --hard origin/master ==> to reset to origin of repository 
+
+  10. git commit -am :==> to add and commit any change in 1 command
+
+  11. git reflog :==> log of different references of commit
+
+  12. git add * :==> It will add files that are unsaved
+
+
+*Repository means its like central storage place for projects...
+
+===>Steps to add new git repo like cs50-lecture0 :
+1. Click on plus sign up right corner.
+2. Give name to repo.
+3. Click add project or create repo.
+
+===> Github Pages: It allows us to deploy our github repo so people can access that particular page
+*Steps to deploy repo to internet:
+1. Go to settings
+2. Change to master branch from default one
+3. Save
