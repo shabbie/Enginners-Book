@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2018 at 11:07 AM
+-- Generation Time: Mar 01, 2018 at 07:19 AM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 7.1.7
 
@@ -52,7 +52,9 @@ INSERT INTO `address` (`user_id`, `street`, `city`, `pincode`, `state`, `country
 
 CREATE TABLE `articles` (
   `user_id` int(10) NOT NULL,
+  `dept_id` int(11) NOT NULL,
   `article_id` int(14) NOT NULL COMMENT '14 is the length of article id',
+  `likes` int(11) NOT NULL,
   `article_type` int(3) NOT NULL,
   `article_text` varchar(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `article_image` longblob,
@@ -63,10 +65,10 @@ CREATE TABLE `articles` (
 -- Dumping data for table `articles`
 --
 
-INSERT INTO `articles` (`user_id`, `article_id`, `article_type`, `article_text`, `article_image`, `create_time`) VALUES
-(1, 1, 1, 'hello there', NULL, 0),
-(1, 2, 1, 'second art', NULL, 0),
-(2, 3, 1, 'another user', NULL, 0);
+INSERT INTO `articles` (`user_id`, `dept_id`, `article_id`, `likes`, `article_type`, `article_text`, `article_image`, `create_time`) VALUES
+(1, 7, 1, 0, 1, 'hello there', NULL, 0),
+(1, 0, 2, 0, 1, 'second art', NULL, 0),
+(2, 7, 3, 0, 1, 'another user', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -119,7 +121,7 @@ INSERT INTO `company` (`comp_name`, `address`, `hr_name`, `domain`) VALUES
 
 CREATE TABLE `department` (
   `dept_id` int(2) NOT NULL COMMENT '2 is std length of dept',
-  `dept_name` text NOT NULL,
+  `dept_name` varchar(20) NOT NULL,
   `hod_name` text NOT NULL,
   `placements` int(3) NOT NULL DEFAULT '0',
   `colg_id` int(3) NOT NULL
@@ -143,6 +145,7 @@ CREATE TABLE `faculty` (
   `user_id` int(10) NOT NULL,
   `dept_id` int(2) NOT NULL,
   `colg_id` int(3) NOT NULL,
+  `univ_id` int(11) NOT NULL,
   `ranking` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -154,9 +157,10 @@ CREATE TABLE `faculty` (
 
 CREATE TABLE `hod` (
   `user_id` int(10) NOT NULL,
-  `enroll_id` bigint(12) NOT NULL,
+  `enroll_no` bigint(12) NOT NULL,
   `dept_id` int(2) NOT NULL,
   `colg_id` int(3) NOT NULL,
+  `univ_id` int(11) NOT NULL,
   `ranking` int(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -171,6 +175,7 @@ CREATE TABLE `student` (
   `enroll_no` bigint(12) NOT NULL COMMENT 'every member of universityy is assigned a unique number by it',
   `dept_id` int(2) DEFAULT NULL COMMENT 'dept id ',
   `colg_id` int(3) NOT NULL,
+  `univ_id` int(11) NOT NULL,
   `year_of_passing` int(4) NOT NULL,
   `ranking` int(3) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -179,9 +184,9 @@ CREATE TABLE `student` (
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `year_of_passing`, `ranking`) VALUES
-(0, 140410107002, 7, 41, 2018, 0),
-(2, 140410107024, 7, 41, 0, 0);
+INSERT INTO `student` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, `year_of_passing`, `ranking`) VALUES
+(0, 140410107002, 7, 41, 0, 2018, 0),
+(2, 140410107024, 7, 41, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -209,9 +214,10 @@ CREATE TABLE `user` (
   `fname` varchar(20) NOT NULL,
   `lname` varchar(10) NOT NULL,
   `gender` int(1) NOT NULL COMMENT '0- male',
-  `dob` date NOT NULL,
+  `dob` varchar(20) NOT NULL,
   `email` varchar(25) NOT NULL,
   `contact` bigint(13) NOT NULL,
+  `address` text NOT NULL,
   `user_type` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -219,10 +225,11 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `password`, `login_status`, `fname`, `lname`, `gender`, `dob`, `email`, `contact`, `user_type`) VALUES
-(1, '1234', 0, 'shabbir', 'bhaisaheb', 0, '2017-12-11', 'abc@gmail.com', 9033257850, 'student'),
-(2, '1234', 0, 'abhi', 'koranne', 0, '2017-12-11', 'xyz@gmail.com', 9999999999, 'faculty'),
-(3, '1234', 0, 'Shabbir', 'bhaisaheb', 0, '1996-09-15', 'shabbirhussainb@gmail.com', 9033257850, 'student');
+INSERT INTO `user` (`user_id`, `password`, `login_status`, `fname`, `lname`, `gender`, `dob`, `email`, `contact`, `address`, `user_type`) VALUES
+(1, '1234', 0, 'shabbir', 'bhaisaheb', 0, '2017-12-11', 'abc@gmail.com', 9033257850, '', 'student'),
+(2, '1234', 0, 'abhi', 'koranne', 0, '2017-12-11', 'xyz@gmail.com', 9999999999, '', 'faculty'),
+(3, '1234', 0, 'Shabbir', 'bhaisaheb', 0, '1996-09-15', 'shabbirhussainb@gmail.com', 9033257850, '', 'student'),
+(4, '12345', 0, 'shabbir', 'bhaisaheb', 0, '15-09-1996', 'avd@gasjb.com', 9033257850, '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -257,7 +264,10 @@ ALTER TABLE `company`
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
-  ADD PRIMARY KEY (`dept_id`);
+  ADD PRIMARY KEY (`dept_id`),
+  ADD UNIQUE KEY `colg_id` (`colg_id`),
+  ADD KEY `dept_id` (`dept_id`),
+  ADD KEY `colg_id_2` (`colg_id`);
 
 --
 -- Indexes for table `faculty`
@@ -268,17 +278,19 @@ ALTER TABLE `faculty`
   ADD UNIQUE KEY `enroll_no` (`enroll_no`),
   ADD KEY `dept_id` (`dept_id`),
   ADD KEY `colg_id` (`colg_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `univ_id` (`univ_id`);
 
 --
 -- Indexes for table `hod`
 --
 ALTER TABLE `hod`
-  ADD PRIMARY KEY (`enroll_id`),
-  ADD UNIQUE KEY `enroll_id` (`enroll_id`),
+  ADD PRIMARY KEY (`enroll_no`),
+  ADD UNIQUE KEY `enroll_id` (`enroll_no`),
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD KEY `dept_id` (`dept_id`),
-  ADD KEY `colg_id` (`colg_id`);
+  ADD KEY `colg_id` (`colg_id`),
+  ADD KEY `univ_id` (`univ_id`);
 
 --
 -- Indexes for table `student`
@@ -289,7 +301,8 @@ ALTER TABLE `student`
   ADD UNIQUE KEY `user_id` (`user_id`),
   ADD KEY `dept_id` (`dept_id`),
   ADD KEY `colg_id` (`colg_id`),
-  ADD KEY `enroll_no` (`enroll_no`);
+  ADD KEY `enroll_no` (`enroll_no`),
+  ADD KEY `univ_id` (`univ_id`);
 
 --
 -- Indexes for table `university`
