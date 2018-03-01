@@ -1,13 +1,11 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@Table(name="user_model")
 public class UserModel implements Serializable {
 
     @Id

@@ -9,23 +9,10 @@ import java.util.Map;
 @RestController
 @RequestMapping(value="/user")
 public class FirstController {
-	
 
-/*	@RequestMapping(value="/login")
-	public String login(@RequestBody Map<String, Object> req)
-	{	
-		String login = req.get("login").toString();
-		String pass = req.get("pass").toString();
-		
-		
-		return login;
-	}*/
-	
-	
-	
 
 	/*
-	 * @RequestMapping(value="/login")
+	  @RequestMapping(value="/login")
 	public JSONObject login(@RequestBody Map<String, Object> req)
 	{	
 		String login = req.get("login").toString();

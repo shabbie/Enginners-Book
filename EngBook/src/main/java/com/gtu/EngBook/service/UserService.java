@@ -6,6 +6,8 @@ import com.gtu.EngBook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
+
 @Service
 public class UserService {
 
@@ -18,15 +20,21 @@ public class UserService {
         return false;
     }
 
-    public boolean login(UserModel st)
+    public String login(UserModel st)
     {
 
        // String enroll = st.getEmail();
        // String pass = st.getPassword();
 
-       // userRepository.findOne();
+        if(userRepository.findOneByEmail(st.getEmail(),st.getPassword()))
+        {
+            return "Login Successful";
+        }
+        else return "Login UnSuccessful";
 
-        if(enroll.equals("140410107024"))
+       //userRepository.findOne("140410107002");
+
+        /*if(enroll.equals("140410107024"))
         {
             if(pass.equals("abhishek"))
             {
@@ -40,7 +48,7 @@ public class UserService {
         else
         {
             st.setLogin_status(false);
-        }
-        return false;
+        }*/
+
     }
 }

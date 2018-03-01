@@ -1,9 +1,6 @@
 package com.gtu.EngBook.controller;
 
-import com.gtu.EngBook.model.AddressModel;
-import com.gtu.EngBook.model.DepartmentModel;
-import com.gtu.EngBook.model.StudentModel;
-import com.gtu.EngBook.model.UserModel;
+import com.gtu.EngBook.model.*;
 import com.gtu.EngBook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,14 +52,19 @@ public class UserController
 	@RequestMapping(value="/register/faculty")
 	public Map<String, Object> facultyregister(@RequestBody Map<String, Object> req)
 	{
-		String enroll = req.get("enroll").toString();
-		String fname = req.get("fname").toString();
-		String lname = req.get("lname").toString();
-		boolean gender=(Boolean)req.get("gender");
-		long dob=(long) req.get("dob");
-		String addr = req.get("addr").toString();
-		long contact = (long) req.get("fname");
-		String email = req.get("email").toString();
+		FacultyModel facultyModel=new FacultyModel();
+		UserModel userModel=new UserModel();
+
+		facultyModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
+		userModel.setFname(req.get("fname").toString());
+		userModel.setLname(req.get("lname").toString());
+		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
+		userModel.setDob((Date)(req.get("dob")));
+		userModel.setAddress(req.get("addr").toString());
+		userModel.setContact((long) req.get("contact"));
+		userModel.setEmail(req.get("email").toString());
+
+
 		String dept = req.get("dept").toString();
 		String col = req.get("col").toString();
 		String univ = req.get("univ").toString();
@@ -74,14 +76,19 @@ public class UserController
 	@RequestMapping(value="/register/hod")
 	public Map<String, Object> hodregister(@RequestBody Map<String, Object> req)
 	{
-		String enroll = req.get("enroll").toString();
-		String fname = req.get("fname").toString();
-		String lname = req.get("lname").toString();
-		boolean gender=(Boolean)req.get("gender");
-		long dob=(long) req.get("dob");
-		String addr = req.get("addr").toString();
-		long contact = (long) req.get("fname");
-		String email = req.get("email").toString();
+		HodModel hodModel=new HodModel();
+		UserModel userModel=new UserModel();
+
+		hodModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
+		userModel.setFname(req.get("fname").toString());
+		userModel.setLname(req.get("lname").toString());
+		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
+		userModel.setDob((Date)(req.get("dob")));
+		userModel.setAddress(req.get("addr").toString());
+		userModel.setContact((long) req.get("contact"));
+		userModel.setEmail(req.get("email").toString());
+
+
 		String dept = req.get("dept").toString();
 		String col = req.get("col").toString();
 		String univ = req.get("univ").toString();
@@ -93,16 +100,20 @@ public class UserController
 	@RequestMapping(value="/register/principal")
 	public Map<String, Object> principalregister(@RequestBody Map<String, Object> req)
 	{
-		String fname = req.get("fname").toString();
-		String lname = req.get("lname").toString();
-		boolean gender=(Boolean)req.get("gender");
-		String website = req.get("website").toString();
-		String tponame = req.get("tponame").toString();
-		long tponumber = (long)req.get("tponumber");
-		long dob=(long) req.get("dob");
-		String addr = req.get("addr").toString();
-		long contact = (long) req.get("fname");
-		String email = req.get("email").toString();
+		CollegeModel collegeModel=new CollegeModel();
+		UserModel userModel=new UserModel();
+
+		userModel.setFname(req.get("fname").toString());
+		userModel.setLname(req.get("lname").toString());
+		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
+		collegeModel.setWebsite(req.get("website").toString());
+		collegeModel.setTpo_name(req.get("tponame").toString());
+
+		userModel.setDob((Date)(req.get("dob")));
+		userModel.setAddress(req.get("addr").toString());
+		userModel.setContact((long) req.get("contact"));
+		userModel.setEmail(req.get("email").toString());
+
 		String col = req.get("col").toString();
 		String univ = req.get("univ").toString();
 		String pass = req.get("pass").toString();
@@ -113,15 +124,21 @@ public class UserController
 	@RequestMapping(value="/register/chancellor")
 	public Map<String, Object> chancellorregister(@RequestBody Map<String, Object> req)
 	{
-		String fname = req.get("fname").toString();
-		String lname = req.get("lname").toString();
+
+		UserModel userModel=new UserModel();
+
+		userModel.setFname(req.get("fname").toString());
+		userModel.setLname(req.get("lname").toString());
+
 		String univname = req.get("univname").toString();
 		String univwebsite = req.get("univwebsite").toString();
-		boolean gender=(Boolean)req.get("gender");
-		long dob=(long) req.get("dob");
-		String addr = req.get("addr").toString();
-		long contact = (long) req.get("fname");
-		String email = req.get("email").toString();
+
+		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
+		userModel.setDob((Date)(req.get("dob")));
+		userModel.setAddress(req.get("addr").toString());
+		userModel.setContact((long) req.get("contact"));
+		userModel.setEmail(req.get("email").toString());
+
 		String pass = req.get("pass").toString();
 
 		return req;
@@ -134,9 +151,9 @@ public class UserController
 		um.setPassword(req.get("password").toString());
 		um.setEmail(req.get("email").toString());
 
-		userService.login(um);
+		req.put("response",userService.login(um));
+
 
 		return req;
 	}
-
 }
