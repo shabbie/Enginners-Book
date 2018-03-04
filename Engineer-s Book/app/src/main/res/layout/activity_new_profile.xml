@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/profile_activity_gradient"
+    tools:context="com.example.abhishekkoranne.engineersbook.Activity.NewProfileActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="80dp"
+        android:background="#ffffff"
+        android:id="@+id/view" />
+
+    <ImageView
+        android:id="@+id/ivprofile"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/abhi_propic"
+        android:layout_marginTop="40dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="260dp"
+        android:background="#ffffff"
+        android:id="@+id/view2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/view"
+        android:layout_alignTop="@+id/view2"
+        android:text="Your Dashboard"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="300dp"
+        android:weightSum="11"
+        android:orientation="horizontal"
+        android:id="@+id/tableLayout">
+        <TableRow>
+            <TextView
+                android:id="@+id/tv_doubts_asked"
+                android:layout_column="1"
+                android:layout_weight="3"
+                android:text="3"
+                android:padding="3dip"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="#d500adcc"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_column="1"
+                />
+
+            <TextView
+                android:id="@+id/tv_doubts_answered"
+                android:layout_column="1"
+                android:layout_weight="3"
+                android:text="10"
+                android:padding="3dip"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="#d500adcc"/>
+
+            <TextView
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tv_points"
+                android:layout_column="1"
+                android:layout_weight="3"
+                android:text="13"
+                android:padding="3dip"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="#d500adcc"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/tv_doubts"
+                android:layout_column="1"
+                android:layout_weight="3"
+                android:text="Doubts Answered"
+                android:padding="3dip"
+                android:gravity="center"
+                android:background="#fe007ecc"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_column="1" />
+            <TextView
+                android:id="@+id/tv_answered"
+                android:layout_column="1"
+                android:layout_weight="3"
+                android:text="Doubts Questioned"
+                android:padding="3dip"
+                android:gravity="center"
+                android:background="#fe007ecc"/>
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_column="1"
+                />
+            <TextView
+                android:id="@+id/tv_apoints"
+                android:layout_column="1"
+                android:layout_weight="3"
+                android:text="Points"
+                android:padding="3dip"
+                android:gravity="center"
+                android:background="#fe007ecc"/>
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/tvname"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivprofile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Abhishek Koranne"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvcollege"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="SVIT-Vasad"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvcity"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvcollege"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Vadodara, India"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/view"
+        android:layout_below="@+id/tableLayout"
+        android:text="Career Interests"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
