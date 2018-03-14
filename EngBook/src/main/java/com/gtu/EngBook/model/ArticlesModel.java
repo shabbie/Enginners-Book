@@ -1,94 +1,136 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Blob;
-import java.util.Date;
 
 @Entity
+@Table(name = "articles")
 public class ArticlesModel implements Serializable {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private long user_id;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    UserModel userModel;
 
+
+    @Column(name="dept_id")
+    private long deptId;
+
+    @Id
     @Column(name = "article_id")
-    private long article_id;
+    private long articleId;
+
+    @Column(name = "likes")
+    private long likes;
 
     @Column(name = "article_type")
-    private int article_type;
+    private int articleType;
 
     @Column(name = "article_text")
-    private String article_text;
+    private String articleText;
 
     @Column(name = "article_image")
-    private Blob article_image;
+    private Blob articleImage;
 
     @Column(name = "create_time")
-    private long create_time;
+    private long createTime;
 
-    public ArticlesModel(long user_id, long article_id, int article_type, String article_text, Blob article_image, long create_time) {
-        this.user_id = user_id;
-        this.article_id = article_id;
-        this.article_type = article_type;
-        this.article_text = article_text;
-        this.article_image = article_image;
-        this.create_time = create_time;
+
+
+    public long getDeptId() {
+        return deptId;
     }
+
+    public void setDeptId(long deptId) {
+        this.deptId = deptId;
+    }
+
+    public long getLikes() {
+        return likes;
+    }
+
+    public void setLikes(long likes) {
+        this.likes = likes;
+    }
+
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+
+
 
     public ArticlesModel() {
     }
 
 
-    public long getUser_id() {
-        return user_id;
+    public long getArticleId() {
+        return articleId;
     }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setArticleId(long articleId) {
+        this.articleId = articleId;
     }
 
-    public long getArticle_id() {
-        return article_id;
+    public int getArticleType() {
+        return articleType;
     }
 
-    public void setArticle_id(long article_id) {
-        this.article_id = article_id;
+    public void setArticleType(int articleType) {
+        this.articleType = articleType;
     }
 
-    public int getArticle_type() {
-        return article_type;
+    public String getArticleText() {
+        return articleText;
     }
 
-    public void setArticle_type(int article_type) {
-        this.article_type = article_type;
+    public void setArticleText(String articleText) {
+        this.articleText = articleText;
     }
 
-    public String getArticle_text() {
-        return article_text;
+    public Blob getArticleImage() {
+        return articleImage;
     }
 
-    public void setArticle_text(String article_text) {
-        this.article_text = article_text;
+    /**
+     *
+     * @param userModel
+     * @param deptId
+     * @param articleId
+     * @param likes
+     * @param articleType
+     * @param articleText
+     * @param articleImage
+     * @param createTime
+     */
+    public ArticlesModel(UserModel userModel, long deptId, long articleId, long likes, int articleType, String articleText, Blob articleImage, long createTime) {
+        this.userModel = userModel;
+        this.deptId = deptId;
+        this.articleId = articleId;
+        this.likes = likes;
+        this.articleType = articleType;
+        this.articleText = articleText;
+        this.articleImage = articleImage;
+        this.createTime = createTime;
     }
 
-    public Blob getArticle_image() {
-        return article_image;
+    public void setArticleImage(Blob articleImage) {
+        this.articleImage = articleImage;
     }
 
-    public void setArticle_image(Blob article_image) {
-        this.article_image = article_image;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public long getCreate_time() {
-        return create_time;
-    }
-
-    public void setCreate_time(long create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 }

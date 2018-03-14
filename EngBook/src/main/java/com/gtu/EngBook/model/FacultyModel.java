@@ -1,21 +1,17 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "faculty")
 public class FacultyModel implements Serializable
 {
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private long user_id;
-
     @Column(name = "enroll_no")
-    private long enroll_no;
+    private long enrollNo;
 
     @Column(name = "dept_id")
     private int dept_id;
@@ -23,34 +19,53 @@ public class FacultyModel implements Serializable
     @Column(name = "colg_id")
     private int colg_id;
 
+    @Column(name = "univ_id")
+    private int univId;
+
     @Column(name = "ranking")
     private int rank;
 
-    public FacultyModel(long user_id, long enroll_no, int dept_id, int colg_id, int rank) {
-        this.user_id = user_id;
-        this.enroll_no = enroll_no;
+    public int getUnivId() {
+        return univId;
+    }
+
+    public void setUnivId(int univId) {
+        this.univId = univId;
+    }
+
+
+    public FacultyModel(long user_id, long enroll_no, int dept_id, int colg_id, int univId, int rank, UserModel userModel) {
+        this.enrollNo = enroll_no;
         this.dept_id = dept_id;
         this.colg_id = colg_id;
+        this.univId = univId;
         this.rank = rank;
+        this.userModel = userModel;
     }
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    UserModel userModel;
 
     public FacultyModel() {
     }
 
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 
     public long getEnroll_no() {
-        return enroll_no;
+        return enrollNo;
     }
 
     public void setEnroll_no(long enroll_no) {
-        this.enroll_no = enroll_no;
+        this.enrollNo = enroll_no;
     }
 
     public int getDept_id() {

@@ -2,12 +2,14 @@ package com.gtu.EngBook.controller;
 
 import com.gtu.EngBook.model.*;
 import com.gtu.EngBook.service.UserService;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -15,145 +17,182 @@ import java.util.Map;
 @RequestMapping(value="/user")
 public class UserController
 {
-
 	@Autowired
 	UserService userService;
 
 	@RequestMapping(value="/register/student")
-	public Map<String, Object> studentregister(@RequestBody Map<String, Object> req)
+	public Map<String, Object> studentregister(HttpServletRequest req)
 	{
 		StudentModel studentModel=new StudentModel();
 		UserModel userModel=new UserModel();
-		DepartmentModel departmentModel=new DepartmentModel();
+
+		studentModel.setEnroll_no(Long.parseLong( req.getParameter("enroll")));
+		userModel.setFname(req.getParameter("fname"));
+		userModel.setLname(req.getParameter("lname"));
+		userModel.setGender(Integer.parseInt(req.getParameter("gender")));
+		userModel.setDob((req.getParameter("dob")));
+    	userModel.setAddress(req.getParameter("addr"));
+		userModel.setContact(Long.parseLong( req.getParameter("contact")));
+		userModel.setEmail(req.getParameter("email"));
+
+		studentModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
+		studentModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
+		studentModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
+
+		studentModel.setYear_of_passing(Integer.parseInt( req.getParameter("yop")));
+		userModel.setPassword(req.getParameter("pass"));
 
 
-		studentModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
-		userModel.setFname(req.get("fname").toString());
-		userModel.setLname(req.get("lname").toString());
-		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
-		userModel.setDob((Date)(req.get("dob")));
-		userModel.setAddress(req.get("addr").toString());
-		userModel.setContact((long) req.get("contact"));
-		userModel.setEmail(req.get("email").toString());
-		departmentModel.setDept_name(req.get("dept").toString());
-		req.get("col").toString();
-		String univ = req.get("univ").toString();
-		int yop= (int) req.get("yop");
-		String pass = req.get("pass").toString();
-
-		boolean result=userService.studentRegister(studentModel);
-
-
-
-
-		return req;
+		return userService.studentRegister(userModel,studentModel);
 	}
 	
 	@RequestMapping(value="/register/faculty")
-	public Map<String, Object> facultyregister(@RequestBody Map<String, Object> req)
+	public Map<String, Object> facultyregister(HttpServletRequest req)
 	{
 		FacultyModel facultyModel=new FacultyModel();
 		UserModel userModel=new UserModel();
 
-		facultyModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
-		userModel.setFname(req.get("fname").toString());
-		userModel.setLname(req.get("lname").toString());
-		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
-		userModel.setDob((Date)(req.get("dob")));
-		userModel.setAddress(req.get("addr").toString());
-		userModel.setContact((long) req.get("contact"));
-		userModel.setEmail(req.get("email").toString());
+		facultyModel.setEnroll_no(Long.parseLong( req.getParameter("enroll")));
+		userModel.setFname(req.getParameter("fname"));
+		userModel.setLname(req.getParameter("lname"));
+		userModel.setGender(Integer.parseInt(req.getParameter("gender")));
+		userModel.setDob((req.getParameter("dob")));
+		userModel.setAddress(req.getParameter("addr"));
+		userModel.setContact(Long.parseLong( req.getParameter("contact")));
+		userModel.setEmail(req.getParameter("email"));
+		facultyModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
+        facultyModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
+        facultyModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
+        userModel.setPassword(req.getParameter("pass"));
 
-
-		String dept = req.get("dept").toString();
-		String col = req.get("col").toString();
-		String univ = req.get("univ").toString();
-		String pass = req.get("pass").toString();
-
-		return req;
+		return userService.facultyRegister(userModel,facultyModel);
 	}
 	
 	@RequestMapping(value="/register/hod")
-	public Map<String, Object> hodregister(@RequestBody Map<String, Object> req)
+	public Map<String, Object> hodregister(HttpServletRequest req)
 	{
 		HodModel hodModel=new HodModel();
 		UserModel userModel=new UserModel();
 
-		hodModel.setEnroll_no(Long.parseLong( req.get("enroll").toString()));
-		userModel.setFname(req.get("fname").toString());
-		userModel.setLname(req.get("lname").toString());
-		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
-		userModel.setDob((Date)(req.get("dob")));
-		userModel.setAddress(req.get("addr").toString());
-		userModel.setContact((long) req.get("contact"));
-		userModel.setEmail(req.get("email").toString());
+		hodModel.setEnroll_no(Long.parseLong( req.getParameter("enroll")));
+		userModel.setFname(req.getParameter("fname"));
+		userModel.setLname(req.getParameter("lname"));
+		userModel.setGender(Integer.parseInt(req.getParameter("gender")));
+		userModel.setDob((req.getParameter("dob")));
+		userModel.setAddress(req.getParameter("addr"));
+		userModel.setContact(Long.parseLong( req.getParameter("contact")));
+		userModel.setEmail(req.getParameter("email"));
+
+        hodModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
+        hodModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
+        hodModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
+        userModel.setPassword(req.getParameter("pass"));
+
+        return userService.hodRegister(userModel,hodModel);
 
 
-		String dept = req.get("dept").toString();
-		String col = req.get("col").toString();
-		String univ = req.get("univ").toString();
-		String pass = req.get("pass").toString();
-
-		return req;
 	}
 	
 	@RequestMapping(value="/register/principal")
-	public Map<String, Object> principalregister(@RequestBody Map<String, Object> req)
+	public Map<String, Object> principalregister(HttpServletRequest req)
 	{
 		CollegeModel collegeModel=new CollegeModel();
 		UserModel userModel=new UserModel();
 
-		userModel.setFname(req.get("fname").toString());
-		userModel.setLname(req.get("lname").toString());
-		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
-		collegeModel.setWebsite(req.get("website").toString());
-		collegeModel.setTpo_name(req.get("tponame").toString());
+		userModel.setFname(req.getParameter("fname"));
+		userModel.setLname(req.getParameter("lname"));
+		userModel.setGender(Integer.parseInt(req.getParameter("gender")));
 
-		userModel.setDob((Date)(req.get("dob")));
-		userModel.setAddress(req.get("addr").toString());
-		userModel.setContact((long) req.get("contact"));
-		userModel.setEmail(req.get("email").toString());
+		collegeModel.setWebsite(req.getParameter("website"));
+		collegeModel.setTpo_name(req.getParameter("tponame"));
+		collegeModel.setColg_name(req.getParameter("colg_name"));
 
-		String col = req.get("col").toString();
-		String univ = req.get("univ").toString();
-		String pass = req.get("pass").toString();
+		userModel.setDob((req.getParameter("dob")));
+		userModel.setAddress(req.getParameter("addr"));
+		userModel.setContact((Long.parseLong( req.getParameter("contact"))));
+		userModel.setEmail(req.getParameter("email"));
 
-		return req;
+        collegeModel.setColgId(Integer.parseInt(req.getParameter("colg_id")));
+        collegeModel.setUniv_id(Integer.parseInt(req.getParameter("univ_id")));
+
+        userModel.setPassword(req.getParameter("pass"));
+
+		return userService.principalRegister(userModel,collegeModel);
 	}
 	
 	@RequestMapping(value="/register/chancellor")
-	public Map<String, Object> chancellorregister(@RequestBody Map<String, Object> req)
+	public Map<String, Object> chancellorregister(HttpServletRequest req)
 	{
 
 		UserModel userModel=new UserModel();
+		UniversityModel universityModel=new UniversityModel();
 
-		userModel.setFname(req.get("fname").toString());
-		userModel.setLname(req.get("lname").toString());
+		userModel.setFname(req.getParameter("fname"));
+		userModel.setLname(req.getParameter("lname"));
 
-		String univname = req.get("univname").toString();
-		String univwebsite = req.get("univwebsite").toString();
+		universityModel.setUniv_name(req.getParameter("univname"));
+		universityModel.setWebsite(req.getParameter("univwebsite"));
+		universityModel.setUniv_id(Integer.parseInt(req.getParameter("uniid")));
 
-		userModel.setGender(Integer.parseInt(req.get("gender").toString()));
-		userModel.setDob((Date)(req.get("dob")));
-		userModel.setAddress(req.get("addr").toString());
-		userModel.setContact((long) req.get("contact"));
-		userModel.setEmail(req.get("email").toString());
+		userModel.setGender(Integer.parseInt(req.getParameter("gender")));
+		userModel.setDob((req.getParameter("dob")));
+		userModel.setAddress(req.getParameter("addr"));
+		userModel.setContact((Long.parseLong( req.getParameter("contact"))));
+		userModel.setEmail(req.getParameter("email"));
+        userModel.setPassword(req.getParameter("pass"));
 
-		String pass = req.get("pass").toString();
-
-		return req;
+		return userService.chancellorRegister(userModel,universityModel);
 	}
 
 	@RequestMapping(value="/login")
-	public Map<String, Object> login(@RequestBody Map<String, Object> req)
+	public Map<String, Object> login(HttpServletRequest req)
 	{
-		UserModel um=new UserModel();
-		um.setPassword(req.get("password").toString());
-		um.setEmail(req.get("email").toString());
+		Map map=new HashMap<String, Object>();
+		map.put("response",userService.login(req.getParameter("email"),req.getParameter("password")));
+		map.put("temp","abcd");
 
-		req.put("response",userService.login(um));
+		Map map2=new HashMap<String, Object>();
+		map2.put("param1", "val1");
+		map2.put("param2", "val2");
+		map2.put("param3", "val3");
+		map2.put("param4", "val4");
 
+		Map[] arrayMap = new Map[3];
+		for (int i = 0; i < 3; i++) {
+			arrayMap[i] = map2;
+		}
 
-		return req;
+		map.put("myArray",arrayMap);
+
+		return map;
+	}
+
+    @RequestMapping(value="/forgotpassword")
+    public Map<String, Object> forgotPassword(HttpServletRequest req)
+    {
+		Map map=new HashMap<>();
+        return map;
+    }
+
+    @GetMapping(value="/getarticle/{userId}/{departmentId}")
+    public Map<String, Object> getArticle(@PathVariable("userId") Long userId, @PathVariable("departmentId") Long departmentID,@ApiParam Pageable pageable)
+    {
+		Map map=new HashMap<>();
+
+    	map=userService.getArticle(userId,departmentID,pageable);
+        return map;
+    }
+
+    @RequestMapping(value = "/updatelikes")
+	public Map<String, Object> updateLikes(HttpServletRequest req) {
+
+		return userService.updateLikes(Integer.parseInt(req.getParameter("article_id")));
+
+	}
+
+	@RequestMapping(value = "/getcomment")
+	public Map<String, Object> getComment(HttpServletRequest req) {
+
+		return userService.getComment(Integer.parseInt(req.getParameter("article_id")));
 	}
 }

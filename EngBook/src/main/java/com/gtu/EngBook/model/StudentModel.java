@@ -1,19 +1,14 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "student")
 public class StudentModel implements Serializable {
-
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private long user_id;
-
     @Column(name = "enroll_no")
     private long enroll_no;
 
@@ -23,32 +18,62 @@ public class StudentModel implements Serializable {
     @Column(name = "colg_id")
     private int colg_id;
 
+    @Column(name = "univ_id")
+    private int univId;
+
+    public int getUnivId() {
+        return univId;
+    }
+
+    public void setUnivId(int univId) {
+        this.univId = univId;
+    }
+
     @Column(name = "year_of_passing")
     private int year_of_passing;
 
     @Column(name = "ranking")
     private int rank;
 
-    public StudentModel(long user_id, long enroll_no, int dept_id, int colg_id, int year_of_passing, int rank) {
-        this.user_id = user_id;
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    UserModel userModel;
+
+    /**
+     *
+
+     * @param enroll_no
+     * @param dept_id
+     * @param colg_id
+     * @param univId
+     * @param year_of_passing
+     * @param rank
+     * @param userModel
+     */
+    public StudentModel(long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, UserModel userModel) {
         this.enroll_no = enroll_no;
         this.dept_id = dept_id;
         this.colg_id = colg_id;
+        this.univId = univId;
         this.year_of_passing = year_of_passing;
         this.rank = rank;
+        this.userModel = userModel;
     }
+
 
     public StudentModel() {
     }
 
 
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 
     public long getEnroll_no() {
         return enroll_no;

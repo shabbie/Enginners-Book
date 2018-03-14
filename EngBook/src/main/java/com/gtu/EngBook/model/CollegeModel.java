@@ -1,24 +1,20 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "college")
 public class CollegeModel implements Serializable
 {
     @Id
-    @GeneratedValue
     @Column(name = "colg_id")
-    private int colg_id;
-
-    @Column(name = "user_id")
-    private long user_id;
+    private int colgId;
 
     @Column(name = "univ_id")
-    private long univ_id;
+    private int univ_id;
 
     @Column(name = "colg_name")
     private String colg_name;
@@ -32,40 +28,59 @@ public class CollegeModel implements Serializable
     @Column(name = "tpo_name")
     private String tpo_name;
 
-    public CollegeModel(int colg_id, long user_id, long univ_id, String colg_name, String website, long tpo_no, String tpo_name) {
-        this.colg_id = colg_id;
-        this.user_id = user_id;
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    UserModel userModel;
+
+
+    /**
+     *
+     * @param colgId
+     * @param univ_id
+     * @param colg_name
+     * @param website
+     * @param tpo_no
+     * @param tpo_name
+     * @param userModel
+     */
+    public CollegeModel(int colgId, int univ_id, String colg_name, String website, long tpo_no, String tpo_name, UserModel userModel) {
+        this.colgId = colgId;
         this.univ_id = univ_id;
         this.colg_name = colg_name;
         this.website = website;
         this.tpo_no = tpo_no;
         this.tpo_name = tpo_name;
+        this.userModel = userModel;
     }
+
 
     public CollegeModel() {
     }
 
-    public long getColg_id() {
-        return colg_id;
+    public long getColgId() {
+        return colgId;
     }
 
-    public void setColg_id(int colg_id) {
-        this.colg_id = colg_id;
+    public void setColgId(int colgId) {
+        this.colgId = colgId;
     }
 
-    public long getUser_id() {
-        return user_id;
-    }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 
     public long getUniv_id() {
         return univ_id;
     }
 
-    public void setUniv_id(long univ_id) {
+    public void setUniv_id(int univ_id) {
         this.univ_id = univ_id;
     }
 

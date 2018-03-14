@@ -1,32 +1,35 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "department")
 public class DepartmentModel implements Serializable
 {
     @Id
-    @GeneratedValue
     @Column(name = "dept_id")
     private int dept_id;
 
     @Column(name = "dept_name")
-    private String dept_name;
+    private String deptName;
 
     @Column(name = "hod_name")
     private String hod_name;
 
-    @Column(name = "no_of_placements")
+    @Column(name = "placements")
     private int no_of_placements;
 
     @Column(name = "colg_id")
     private int colg_id;
 
-    public DepartmentModel(int dept_id, String dept_name, String hod_name, int no_of_placements, int colg_id) {
+
+
+    public DepartmentModel(int dept_id, String deptName, String hod_name, int no_of_placements, int colg_id) {
         this.dept_id = dept_id;
-        this.dept_name = dept_name;
+        this.deptName = deptName;
         this.hod_name = hod_name;
         this.no_of_placements = no_of_placements;
         this.colg_id = colg_id;
@@ -43,12 +46,12 @@ public class DepartmentModel implements Serializable
         this.dept_id = dept_id;
     }
 
-    public String getDept_name() {
-        return dept_name;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setDept_name(String dept_name) {
-        this.dept_name = dept_name;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
     public String getHod_name() {

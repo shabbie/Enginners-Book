@@ -1,23 +1,24 @@
 package com.gtu.EngBook.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
-@Table(name="user_model")
+@Table(name="user")
 public class UserModel implements Serializable {
 
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    private long user_id;
+    private long userId;
 
     @Column(name = "password")
     private String password;
 
     @Column(name = "login_status")
-    private boolean login_status;
+    private boolean loginStatus;
 
     @Column(name = "fname")
     private String fname;
@@ -29,7 +30,7 @@ public class UserModel implements Serializable {
     private int gender;
 
     @Column(name = "dob")
-    private Date dob;
+    private String dob;
 
     @Column(name = "email")
     private String email;
@@ -37,35 +38,87 @@ public class UserModel implements Serializable {
     @Column(name = "contact")
     private long contact;
 
-    @Column(name = "user_type")
-    private long user_type;
-
     @Column(name = "address")
     private String address;
 
-    public UserModel(long user_id, String password, boolean login_status, String fname, String lname, int gender, Date dob, String email, long contact, long user_type, String address) {
-        this.user_id = user_id;
-        this.password = password;
-        this.login_status = login_status;
-        this.fname = fname;
-        this.lname = lname;
-        this.gender = gender;
-        this.dob = dob;
-        this.email = email;
-        this.contact = contact;
-        this.user_type = user_type;
-        this.address = address;
+
+    @Column(name = "user_type")
+    private String userType;
+
+
+    // Relationship
+    @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    StudentModel studentModel;
+
+    @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    FacultyModel facultyModel;
+
+    @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    HodModel hodModel;
+
+
+    @OneToOne(mappedBy = "userModel",cascade=CascadeType.ALL)
+    @JsonManagedReference
+    CollegeModel collegeModel;
+
+    @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    UniversityModel universityModel;
+
+    @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    ArticlesModel articlesModel;
+
+
+    public HodModel getHodModel() {
+        return hodModel;
     }
 
-    public UserModel() {
+    public void setHodModel(HodModel hodModel) {
+        this.hodModel = hodModel;
     }
 
-    public long getUser_id() {
-        return user_id;
+    public CollegeModel getCollegeModel() {
+        return collegeModel;
     }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setCollegeModel(CollegeModel collegeModel) {
+        this.collegeModel = collegeModel;
+    }
+
+    public UniversityModel getUniversityModel() {
+        return universityModel;
+    }
+
+    public void setUniversityModel(UniversityModel universityModel) {
+        this.universityModel = universityModel;
+    }
+
+    public ArticlesModel getArticlesModel() {
+        return articlesModel;
+    }
+
+    public void setArticlesModel(ArticlesModel articlesModel) {
+        this.articlesModel = articlesModel;
+    }
+
+    public StudentModel getStudentModel() {
+        return studentModel;
+    }
+
+    public void setStudentModel(StudentModel studentModel) {
+        this.studentModel = studentModel;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {
@@ -76,12 +129,12 @@ public class UserModel implements Serializable {
         this.password = password;
     }
 
-    public boolean isLogin_status() {
-        return login_status;
+    public boolean isLoginstatus() {
+        return loginStatus;
     }
 
-    public void setLogin_status(boolean login_status) {
-        this.login_status = login_status;
+    public void setLoginStatus(boolean loginStatus) {
+        this.loginStatus = loginStatus;
     }
 
     public String getFname() {
@@ -108,11 +161,11 @@ public class UserModel implements Serializable {
         this.gender = gender;
     }
 
-    public Date getDob() {
+    public String getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(String dob) {
         this.dob = dob;
     }
 
@@ -132,12 +185,21 @@ public class UserModel implements Serializable {
         this.contact = contact;
     }
 
-    public long getUser_type() {
-        return user_type;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setUser_type(long user_type) {
-        this.user_type = user_type;
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+
+    public FacultyModel getFacultyModel() {
+        return facultyModel;
+    }
+
+    public void setFacultyModel(FacultyModel facultyModel) {
+        this.facultyModel = facultyModel;
     }
 
     public String getAddress() {
@@ -146,5 +208,51 @@ public class UserModel implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+
+
+    //** constructors **//
+    public UserModel() {
+    }
+
+    /**
+     *
+     * @param userId
+     * @param password
+     * @param loginStatus
+     * @param fname
+     * @param lname
+     * @param gender
+     * @param dob
+     * @param email
+     * @param contact
+     * @param address
+     * @param userType
+     * @param studentModel
+     * @param facultyModel
+     * @param hodModel
+     * @param collegeModel
+     * @param universityModel
+     * @param articlesModel
+     */
+    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, int gender, String dob, String email, long contact, String address, String userType, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, ArticlesModel articlesModel) {
+        this.userId = userId;
+        this.password = password;
+        this.loginStatus = loginStatus;
+        this.fname = fname;
+        this.lname = lname;
+        this.gender = gender;
+        this.dob = dob;
+        this.email = email;
+        this.contact = contact;
+        this.address = address;
+        this.userType = userType;
+        this.studentModel = studentModel;
+        this.facultyModel = facultyModel;
+        this.hodModel = hodModel;
+        this.collegeModel = collegeModel;
+        this.universityModel = universityModel;
+        this.articlesModel = articlesModel;
     }
 }

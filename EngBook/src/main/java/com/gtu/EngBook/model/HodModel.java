@@ -1,19 +1,15 @@
 package com.gtu.EngBook.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "hod")
 public class HodModel implements Serializable
 {
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private long user_id;
-
     @Column(name = "enroll_no")
     private long enroll_no;
 
@@ -23,11 +19,36 @@ public class HodModel implements Serializable
     @Column(name = "colg_id")
     private int colg_id;
 
+    @Column(name = "univ_id")
+    private int univId;
+
+    public int getUnivId() {
+        return univId;
+    }
+
+    public void setUnivId(int univId) {
+        this.univId = univId;
+    }
+
     @Column(name = "ranking")
     private int rank;
 
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    UserModel userModel;
+
+
     public HodModel(long user_id, long enroll_no, int dept_id, int colg_id, int rank) {
-        this.user_id = user_id;
         this.enroll_no = enroll_no;
         this.dept_id = dept_id;
         this.colg_id = colg_id;
@@ -37,13 +58,6 @@ public class HodModel implements Serializable
     public HodModel() {
     }
 
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 
     public long getEnroll_no() {
         return enroll_no;
