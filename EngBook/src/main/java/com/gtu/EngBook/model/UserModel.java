@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name="user")
@@ -25,6 +26,10 @@ public class UserModel implements Serializable {
 
     @Column(name = "lname")
     private String lname;
+
+    @Column(name = "profile_pic")
+    private String profilePic;
+
 
     @Column(name = "gender")
     private int gender;
@@ -68,10 +73,38 @@ public class UserModel implements Serializable {
     @JsonManagedReference
     UniversityModel universityModel;
 
-    @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "userModel", cascade=CascadeType.ALL)
     @JsonManagedReference
-    ArticlesModel articlesModel;
+    List<ArticlesModel> articlesModel;
 
+    @OneToMany(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    List<CommentModel> commentModel;
+
+    @OneToMany(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    List<CommentModel> doubtModel;
+
+    @OneToMany(mappedBy = "userModel", cascade=CascadeType.ALL)
+    @JsonManagedReference
+    List<AnswerModel> answerModel;
+
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public List<AnswerModel> getAnswerModel() {
+        return answerModel;
+    }
+
+    public void setAnswerModel(List<AnswerModel> answerModel) {
+        this.answerModel = answerModel;
+    }
 
     public HodModel getHodModel() {
         return hodModel;
@@ -89,6 +122,14 @@ public class UserModel implements Serializable {
         this.collegeModel = collegeModel;
     }
 
+    public List<CommentModel> getDoubtModel() {
+        return doubtModel;
+    }
+
+    public void setDoubtModel(List<CommentModel> doubtModel) {
+        this.doubtModel = doubtModel;
+    }
+
     public UniversityModel getUniversityModel() {
         return universityModel;
     }
@@ -97,11 +138,11 @@ public class UserModel implements Serializable {
         this.universityModel = universityModel;
     }
 
-    public ArticlesModel getArticlesModel() {
+    public List<ArticlesModel> getArticlesModel() {
         return articlesModel;
     }
 
-    public void setArticlesModel(ArticlesModel articlesModel) {
+    public void setArticlesModel(List<ArticlesModel> articlesModel) {
         this.articlesModel = articlesModel;
     }
 
@@ -216,6 +257,18 @@ public class UserModel implements Serializable {
     public UserModel() {
     }
 
+    public boolean isLoginStatus() {
+        return loginStatus;
+    }
+
+    public List<CommentModel> getCommentModel() {
+        return commentModel;
+    }
+
+    public void setCommentModel(List<CommentModel> commentModel) {
+        this.commentModel = commentModel;
+    }
+
     /**
      *
      * @param userId
@@ -223,6 +276,7 @@ public class UserModel implements Serializable {
      * @param loginStatus
      * @param fname
      * @param lname
+     * @param profilePic
      * @param gender
      * @param dob
      * @param email
@@ -235,13 +289,17 @@ public class UserModel implements Serializable {
      * @param collegeModel
      * @param universityModel
      * @param articlesModel
+     * @param commentModel
+     * @param doubtModel
+     * @param answerModel
      */
-    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, int gender, String dob, String email, long contact, String address, String userType, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, ArticlesModel articlesModel) {
+    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, String profilePic, int gender, String dob, String email, long contact, String address, String userType, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, List<ArticlesModel> articlesModel, List<CommentModel> commentModel, List<CommentModel> doubtModel, List<AnswerModel> answerModel) {
         this.userId = userId;
         this.password = password;
         this.loginStatus = loginStatus;
         this.fname = fname;
         this.lname = lname;
+        this.profilePic = profilePic;
         this.gender = gender;
         this.dob = dob;
         this.email = email;
@@ -254,5 +312,8 @@ public class UserModel implements Serializable {
         this.collegeModel = collegeModel;
         this.universityModel = universityModel;
         this.articlesModel = articlesModel;
+        this.commentModel = commentModel;
+        this.doubtModel = doubtModel;
+        this.answerModel = answerModel;
     }
 }

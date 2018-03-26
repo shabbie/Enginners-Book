@@ -35,6 +35,18 @@ public class StudentModel implements Serializable {
     @Column(name = "ranking")
     private int rank;
 
+    @Column(name = "interest")
+    private String interest;
+
+
+    public String getInterest() {
+        return interest;
+    }
+
+    public void setInterest(String interest) {
+        this.interest = interest;
+    }
+
     public UserModel getUserModel() {
         return userModel;
     }
@@ -48,27 +60,29 @@ public class StudentModel implements Serializable {
     @JsonBackReference
     UserModel userModel;
 
+
     /**
      *
-
+     *
      * @param enroll_no
      * @param dept_id
      * @param colg_id
      * @param univId
      * @param year_of_passing
      * @param rank
+     * @param interest
      * @param userModel
      */
-    public StudentModel(long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, UserModel userModel) {
+    public StudentModel(long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, String interest, UserModel userModel) {
         this.enroll_no = enroll_no;
         this.dept_id = dept_id;
         this.colg_id = colg_id;
         this.univId = univId;
         this.year_of_passing = year_of_passing;
         this.rank = rank;
+        this.interest = interest;
         this.userModel = userModel;
     }
-
 
     public StudentModel() {
     }

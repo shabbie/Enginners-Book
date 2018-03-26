@@ -13,5 +13,3 @@ public interface UserRepository extends JpaRepository<UserModel, String > {
     public UserModel findOneByEmail(String email);
     public UserModel findByUserId(Long user_id);
 }
-
-

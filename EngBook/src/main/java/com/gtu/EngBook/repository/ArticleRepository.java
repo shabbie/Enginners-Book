@@ -15,5 +15,5 @@ public interface ArticleRepository extends JpaRepository<ArticlesModel, Long > {
    public List<ArticlesModel> findAllByUserModelNotAndDeptId(UserModel userModel, long dept_id, Pageable pageable);
 
 
-   public ArticlesModel findByArticleId(int article_id );
+   public ArticlesModel findByArticleId(Long article_id );
 }

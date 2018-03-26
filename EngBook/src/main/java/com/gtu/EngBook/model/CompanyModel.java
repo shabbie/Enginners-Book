@@ -9,7 +9,16 @@ public class CompanyModel implements Serializable
 {
     @Id
     @Column(name = "comp_name")
-    private String comp_name;
+    private String compName;
+
+    @Column(name="comp_id")
+    private long compId;
+
+    @Column(name = "contact")
+    private long contact;
+
+    @Column(name = "hr_contact")
+    private long hrContact;
 
     @Column(name = "address")
     private String address;
@@ -20,22 +29,61 @@ public class CompanyModel implements Serializable
     @Column(name = "domain")
     private String domain;
 
-    public CompanyModel(String comp_name, String address, String hr_name, String domain) {
-        this.comp_name = comp_name;
+    /**
+     *
+     * @param compName
+     * @param compId
+     * @param contact
+     * @param hrContact
+     * @param address
+     * @param hr_name
+     * @param domain
+     */
+    public CompanyModel(String compName, long compId, long contact, long hrContact, String address, String hr_name, String domain) {
+        this.compName = compName;
+        this.compId = compId;
+        this.contact = contact;
+        this.hrContact = hrContact;
         this.address = address;
         this.hr_name = hr_name;
         this.domain = domain;
     }
 
+
+
     public CompanyModel() {
     }
 
-    public String getComp_name() {
-        return comp_name;
+    public String getCompName() {
+        return compName;
     }
 
-    public void setComp_name(String comp_name) {
-        this.comp_name = comp_name;
+    public void setCompName(String compName) {
+        this.compName = compName;
+    }
+
+    public long getCompId() {
+        return compId;
+    }
+
+    public void setCompId(long compId) {
+        this.compId = compId;
+    }
+
+    public long getContact() {
+        return contact;
+    }
+
+    public void setContact(long contact) {
+        this.contact = contact;
+    }
+
+    public long getHrContact() {
+        return hrContact;
+    }
+
+    public void setHrContact(long hrContact) {
+        this.hrContact = hrContact;
     }
 
     public String getAddress() {

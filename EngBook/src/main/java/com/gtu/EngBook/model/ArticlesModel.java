@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Blob;
 
 @Entity
 @Table(name = "articles")
 public class ArticlesModel implements Serializable {
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     UserModel userModel;
@@ -33,7 +32,7 @@ public class ArticlesModel implements Serializable {
     private String articleText;
 
     @Column(name = "article_image")
-    private Blob articleImage;
+    private String articleImage;
 
     @Column(name = "create_time")
     private long createTime;
@@ -96,13 +95,12 @@ public class ArticlesModel implements Serializable {
         this.articleText = articleText;
     }
 
-    public Blob getArticleImage() {
+    public String getArticleImage() {
         return articleImage;
     }
 
     /**
-     *
-     * @param userModel
+     *  @param userModel
      * @param deptId
      * @param articleId
      * @param likes
@@ -111,7 +109,7 @@ public class ArticlesModel implements Serializable {
      * @param articleImage
      * @param createTime
      */
-    public ArticlesModel(UserModel userModel, long deptId, long articleId, long likes, int articleType, String articleText, Blob articleImage, long createTime) {
+    public ArticlesModel(UserModel userModel, long deptId, long articleId, long likes, int articleType, String articleText, String articleImage, long createTime) {
         this.userModel = userModel;
         this.deptId = deptId;
         this.articleId = articleId;
@@ -122,7 +120,7 @@ public class ArticlesModel implements Serializable {
         this.createTime = createTime;
     }
 
-    public void setArticleImage(Blob articleImage) {
+    public void setArticleImage(String articleImage) {
         this.articleImage = articleImage;
     }
 
