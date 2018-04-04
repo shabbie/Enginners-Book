@@ -55,6 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ArticlesFragment extends Fragment {
     RecyclerView rv_article;
     FloatingActionButton fab_add_article;
+    static int j = 0;
     /*String[] user_name;
     String[] time_stamp;
     String[] text_post;
@@ -62,6 +63,7 @@ public class ArticlesFragment extends Fragment {
     String[] no_of_shares;
     int[] images={R.drawable.img,R.drawable.jiggy};*/
 
+    JSONArray arr1 = new JSONArray();
     ArrayList<Article> articleList = new ArrayList<>();
     ArrayList<Comment> commentList = new ArrayList<>();
 
@@ -147,31 +149,44 @@ public class ArticlesFragment extends Fragment {
                         Log.d("error", "content: " + content);
 
 
-                        JsonArray arr=content.getAsJsonArray("ArticleList");
-                        JsonElement[] elements=new JsonElement[arr.size()];
+                        JsonArray arr = content.getAsJsonArray("ArticleList");
+                        JsonArray arr1 = content.getAsJsonArray("numberOfCommmentsList");
 
-                        String articleImage,articleText,deptId,articleId,likes,articleType,createTime;
 
-                        for(int i=0;i<arr.size();i++) {
-                            elements[i] =arr.get(i);
-                            deptId=""+elements[i].getAsJsonObject().get("deptId");
-                            articleId=""+elements[i].getAsJsonObject().get("articleId");
-                            likes=""+elements[i].getAsJsonObject().get("likes");
-                            articleType=""+elements[i].getAsJsonObject().get("articleType");
-                            articleText=""+elements[i].getAsJsonObject().get("articleText");
-                            articleImage=""+elements[i].getAsJsonObject().get("articleImage");
-                            createTime=""+elements[i].getAsJsonObject().get("createTime");
+                        // Log.d("error", "arr1: " + arr1);
 
-                         //   Log.d("errorID", "OBJ: " + elements[i].getAsJsonObject().get("articleId"));
-                            displayArticles(deptId,articleId,likes,articleType,articleText,articleImage,createTime);
+                        JsonElement[] elements = new JsonElement[arr.size()];
+                        JsonElement[] commentElements = new JsonElement[arr1.size()];
+                        Log.d("error", "cmmnt: " + arr1.get(1));
+
+                        String articleImage, articleText, deptId, articleId, likes, articleType, createTime;
+
+                        for (int j = 0, n = arr1.size(); j < n; j++) {
+                            commentElements[j] = arr1.get(j);
+                            Log.d("error", "cmmnt: " + arr1.get(j));
+                        }
+
+                        for (int i = 0, m = arr.size(); i < m; i++) {
+                            elements[i] = arr.get(i);
+                            deptId = "" + elements[i].getAsJsonObject().get("deptId");
+                            articleId = "" + elements[i].getAsJsonObject().get("articleId");
+                            likes = "" + elements[i].getAsJsonObject().get("likes");
+                            articleType = "" + elements[i].getAsJsonObject().get("articleType");
+                            articleText = "" + elements[i].getAsJsonObject().get("articleText");
+                            articleImage = "" + elements[i].getAsJsonObject().get("articleImage");
+                            createTime = "" + elements[i].getAsJsonObject().get("createTime");
+
+                            //   Log.d("errorID", "OBJ: " + elements[i].getAsJsonObject().get("articleId"));
+
+                            displayArticles(deptId, articleId, likes, articleType, articleText, articleImage, createTime, commentElements[i], m);
                         }
 
 
-                     //   ArrayList<Article> myArticlesList = gson.fromJson(content.get("ArticleList").getAsJsonArray().toString(),
-                             //   new TypeToken<ArrayList<Article>>(){}.getType());
+                        //   ArrayList<Article> myArticlesList = gson.fromJson(content.get("ArticleList").getAsJsonArray().toString(),
+                        //   new TypeToken<ArrayList<Article>>(){}.getType());
 
-                      //  Log.d("error", "arrList: " + myArticlesList.get(0).);
-                   //     displayArticles(myArticlesList);
+                        //  Log.d("error", "arrList: " + myArticlesList.get(0).);
+                        //     displayArticles(myArticlesList);
 
                     } else {
                         Toast.makeText(getActivity(), "No response available.", Toast.LENGTH_SHORT).show();
@@ -290,25 +305,35 @@ public class ArticlesFragment extends Fragment {
 
     }
 
-    private void displayArticles(String deptId,String articleId,String likes,String articleType,String articleText,String articleImage,String createTime) {
+    private void displayArticles(String deptId, String articleId, String likes, String articleType, String articleText, String articleImage, String createTime, Object comment, int size) {
 
-  //     ArrayList arrayList=new ArrayList();
+        //     ArrayList arrayList=new ArrayList();
+
+        Object[] comments = new Object[size];
+        comments[j] = comment;
+        Log.d("Error", "Comments: " + comments[j]);
+
 
         User user1 = new User(1, "xx@xx.com", "abc@gmail.com", "Abhi", "Koranne", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
         User user2 = new User(2, "abc@gmail.com", "abc@gmail.com", "JIGGY", "VYAS", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
         User user3 = new User(3, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8", "abc@gmail.com", "Shabbir", "Bhaisaheb", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
         User user4 = new User(4, "ac@gmail.com", "abc@gmail.com", "Himalay", "Patel", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
         User user5 = new User(5, "bc@gmail.com", "abc@gmail.com", "NABDU", "Dot NET", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-        commentList.add(new Comment(1000,1,"This is comment 1",user1));
-        commentList.add(new Comment(2000,2,"This is comment 2",user2));
-        commentList.add(new Comment(3000,3,"This is comment 3",user3));
-        commentList.add(new Comment(4000,4,"This is comment 4",user4));
-        commentList.add(new Comment(5000,5,"This is comment 5",user5));
-        articleList.add(new Article(1000, 1, articleText, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1811310904%2Flogo100x100_SM_twitter_400x400.jpg&imgrefurl=https%3A%2F%2Ftwitter.com%2Fsomos100x100&docid=ZK72S9aXTiELUM&tbnid=-1E2q0TplBkcCM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA..i&w=400&h=400&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA&iact=mrc&uact=8", 5, 20,user1, commentList));
+        commentList.add(new Comment(1000, 1, "This is comment 1", user1));
+        commentList.add(new Comment(2000, 2, "This is comment 2", user2));
+        commentList.add(new Comment(3000, 3, "This is comment 3", user3));
+        commentList.add(new Comment(4000, 4, "This is comment 4", user4));
+        commentList.add(new Comment(5000, 5, "This is comment 5", user5));
+        articleList.add(new Article(1000, 1, articleText, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1811310904%2Flogo100x100_SM_twitter_400x400.jpg&imgrefurl=https%3A%2F%2Ftwitter.com%2Fsomos100x100&docid=ZK72S9aXTiELUM&tbnid=-1E2q0TplBkcCM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA..i&w=400&h=400&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA&iact=mrc&uact=8", 5, 20, user1, commentList));
 
-        ArticlesAdapter adapt = new ArticlesAdapter(getActivity(), articleList);
-        rv_article.setAdapter(adapt);
-        rv_article.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        try {
+            ArticlesAdapter adapt = new ArticlesAdapter(getActivity(), articleList, comments[j],size);
+            j++;
+            rv_article.setAdapter(adapt);
+            rv_article.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "jjj"+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
