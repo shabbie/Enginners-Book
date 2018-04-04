@@ -4,6 +4,7 @@ import com.gtu.EngBook.model.*;
 import com.gtu.EngBook.repository.CommentRepository;
 import com.gtu.EngBook.service.UserService;
 import com.sendgrid.*;
+import com.sun.xml.internal.bind.v2.TODO;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class UserController
 	UserService userService;
 
 
-	//======PROFILE======
+	//									======PROFILE======
 	@RequestMapping(value = "/profile")
 	public Map<String,Object> showProfile(HttpServletRequest req)
 	{
@@ -60,7 +61,37 @@ public class UserController
 		return userService.updateProfile(userModel,studentModel);
 	}
 
-	// END
+	//								======PROFILE====== END
+
+
+
+	// 							=======RETIEVAL============
+
+	//							=========Company==========
+	@RequestMapping(value = "/getcompanylist")
+	public Map<String,Object> ComapanyList(HttpServletRequest request)
+	{
+		HashMap<String,Object> response=new HashMap<>();
+		userService.getComapnyList();
+
+		return response;
+	}
+
+	@RequestMapping(value = "/getyearplacement")
+	public Map<String,Object> yearWisePlacement(HttpServletRequest request)
+	{
+		HashMap<String,Object> response=new HashMap<>();
+
+		userService.getYearWisePlacement(Long.parseLong(request.getParameter("comp_id")));
+
+		return response;
+	}
+
+
+
+
+	//							=========END Company==========
+
 
 	@RequestMapping(value="/register/student")
 	public Map<String, Object> studentregister(HttpServletRequest req) throws IOException, SQLException {
@@ -85,6 +116,7 @@ public class UserController
 		studentModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
 		studentModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
 		studentModel.setInterest(req.getParameter("interest)"));
+		studentModel.setCompanyId(req.getParameter("comp_id"));
 
 		studentModel.setYear_of_passing(Integer.parseInt( req.getParameter("yop")));
 		userModel.setPassword(req.getParameter("pass"));
@@ -235,7 +267,6 @@ public class UserController
 	{
 		Map map=new HashMap<String, Object>();
 		map.put("response",userService.login(req.getParameter("email"),req.getParameter("password")));
-
 		return map;
 	}
 
@@ -303,6 +334,17 @@ FORGOT PASSSwORD
 	//RETRIEVING
 
 	//GETTING ARTICLE
+	/*@RequestMapping(value="/getarticle")
+	public Map<String, Object> getArticle(HttpServletRequest req,@ApiParam Pageable pageable)
+	{
+		Map map=new HashMap<>();
+		long userId= Long.parseLong(req.getParameter("user_id"));
+		long departmentID= Long.parseLong(req.getParameter("dept_id"));
+
+		map=userService.getArticle(userId,departmentID,pageable);
+		return map;
+	}*/
+
 	@GetMapping(value="/getarticle/{userId}/{departmentId}")
 	public Map<String, Object> getArticle(@PathVariable("userId") Long userId, @PathVariable("departmentId") Long departmentID,@ApiParam Pageable pageable)
 	{
@@ -356,6 +398,7 @@ FORGOT PASSSwORD
 				doubtModel.setTag(request.getParameter("tag"));
 				doubtModel.setUserModel(userService.knowUserModel(Long.parseLong(request.getParameter("user_id"))));
                 doubtModel.setCreateTime(System.currentTimeMillis());
+                doubtModel.setHeading(request.getParameter("heading"));
 
 				mresponse.put("doubt response",userService.addDoubt(doubtModel));
 				return mresponse;
@@ -404,7 +447,7 @@ FORGOT PASSSwORD
 		return userService.addComment(commentModel);
 	}
 
-	//ADDING DOUBT OVER HERE
+
 	@RequestMapping(value = "/addanswer")
 	public Map<String, Object> addAnswer(HttpServletRequest req) throws SQLException, IOException {
         Map<String, Object> mresponse = new HashMap<>();

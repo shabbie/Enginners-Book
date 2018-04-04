@@ -8,18 +8,55 @@ import java.io.Serializable;
 @Entity
 @Table(name = "student")
 public class StudentModel implements Serializable {
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    UserModel userModel;
     @Id
     @Column(name = "enroll_no")
     private long enroll_no;
-
     @Column(name = "dept_id")
     private int dept_id;
-
     @Column(name = "colg_id")
     private int colg_id;
-
     @Column(name = "univ_id")
     private int univId;
+    @Column(name = "year_of_passing")
+    private int year_of_passing;
+    @Column(name = "ranking")
+    private int rank;
+    @Column(name = "interest")
+    private String interest;
+    @Column(name = "comp_id")
+    private String companyId;
+
+
+    /**
+     *
+     * @param userModel
+     * @param enroll_no
+     * @param dept_id
+     * @param colg_id
+     * @param univId
+     * @param year_of_passing
+     * @param rank
+     * @param interest
+     * @param companyId
+     */
+    public StudentModel(UserModel userModel, long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, String interest, String companyId) {
+        this.userModel = userModel;
+        this.enroll_no = enroll_no;
+        this.dept_id = dept_id;
+        this.colg_id = colg_id;
+        this.univId = univId;
+        this.year_of_passing = year_of_passing;
+        this.rank = rank;
+        this.interest = interest;
+        this.companyId = companyId;
+    }
+
+    public StudentModel() {
+    }
 
     public int getUnivId() {
         return univId;
@@ -28,16 +65,6 @@ public class StudentModel implements Serializable {
     public void setUnivId(int univId) {
         this.univId = univId;
     }
-
-    @Column(name = "year_of_passing")
-    private int year_of_passing;
-
-    @Column(name = "ranking")
-    private int rank;
-
-    @Column(name = "interest")
-    private String interest;
-
 
     public String getInterest() {
         return interest;
@@ -55,39 +82,13 @@ public class StudentModel implements Serializable {
         this.userModel = userModel;
     }
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    UserModel userModel;
-
-
-    /**
-     *
-     *
-     * @param enroll_no
-     * @param dept_id
-     * @param colg_id
-     * @param univId
-     * @param year_of_passing
-     * @param rank
-     * @param interest
-     * @param userModel
-     */
-    public StudentModel(long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, String interest, UserModel userModel) {
-        this.enroll_no = enroll_no;
-        this.dept_id = dept_id;
-        this.colg_id = colg_id;
-        this.univId = univId;
-        this.year_of_passing = year_of_passing;
-        this.rank = rank;
-        this.interest = interest;
-        this.userModel = userModel;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public StudentModel() {
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
-
-
 
     public long getEnroll_no() {
         return enroll_no;

@@ -36,6 +36,8 @@ public class DoubtModel implements Serializable {
     @Column(name = "create_time")
     private long createTime;
 
+    @Column(name = "heading")
+    private String heading;
 
     @Column(name = "text")
     private String text;
@@ -123,31 +125,40 @@ public class DoubtModel implements Serializable {
         this.createTime = createTime;
     }
 
+    public String getHeading() {
+        return heading;
+    }
+
+    public void setHeading(String heading) {
+        this.heading = heading;
+    }
+
     public DoubtModel() {
     }
 
-
-
     /**
+     *
      * @param userModel
      * @param doubtId
      * @param deptId
+     * @param downvote
+     * @param createTime
+     * @param heading
      * @param text
      * @param doubtImage
      * @param tag
      * @param upvote
-     * @param downvote
-     * @param createTime
      */
-    public DoubtModel(UserModel userModel, long doubtId, long deptId, String text, String doubtImage, String tag, int upvote, long downvote, long createTime) {
+    public DoubtModel(UserModel userModel, long doubtId, long deptId, int downvote, long createTime, String heading, String text, String doubtImage, String tag, int upvote) {
         this.userModel = userModel;
         this.doubtId = doubtId;
         this.deptId = deptId;
+        this.downvote = downvote;
+        this.createTime = createTime;
+        this.heading = heading;
         this.text = text;
         this.doubtImage = doubtImage;
         this.tag = tag;
         this.upvote = upvote;
-        this.downvote = (int) downvote;
-        this.createTime = createTime;
     }
 }

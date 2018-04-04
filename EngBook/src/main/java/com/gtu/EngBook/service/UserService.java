@@ -33,8 +33,10 @@ public class UserService {
     private AnswerRepository answerRepository;
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private StudentRepository studentRepository;
 
-    public UserModel knowUserModel(long userId){
+    public UserModel knowUserModel(Long userId){
         return userRepository.findByUserId(userId);
     }
 
@@ -119,6 +121,8 @@ public class UserService {
         userRepository.save(userModel);
         res.put("response","true");
         res.put("Message","Registration Successfull");
+        res.put("user_id",userModel.getUserId());
+        res.put("profile_pic",userModel.getProfilePic());
 
         return res;
     }
@@ -140,6 +144,8 @@ public class UserService {
         userRepository.save(userModel);
         res.put("response","true");
         res.put("Message","Registration Successfull");
+        res.put("user_id",userModel.getUserId());
+        res.put("profile_pic",userModel.getProfilePic());
 
         return res;
     }
@@ -160,6 +166,8 @@ public class UserService {
         userRepository.save(userModel);
         res.put("response","true");
         res.put("Message","Registration Successfull");
+        res.put("user_id",userModel.getUserId());
+        res.put("profile_pic",userModel.getProfilePic());
 
         return res;
     }
@@ -178,8 +186,11 @@ public class UserService {
         universityModel.setUserModel(userModel);
 
         userRepository.save(userModel);
+
         res.put("response","true");
         res.put("Message","Registration Successfull");
+        res.put("user_id",userModel.getUserId());
+        res.put("profile_pic",userModel.getProfilePic());
 
 
         return res;
@@ -202,7 +213,8 @@ public class UserService {
         userRepository.save(userModel);
         res.put("response","true");
         res.put("Message","Registration Successfull");
-
+        res.put("user_id",userModel.getUserId());
+        res.put("profile_pic",userModel.getProfilePic());
 
         return res;
     }
@@ -220,6 +232,7 @@ public class UserService {
         companyRepository.save(companyModel);
         res.put("response","true");
         res.put("Message","Registration Successfull");
+
         return res;
     }
 
@@ -236,6 +249,8 @@ public class UserService {
                 res.put("response","true");
                 res.put("Message","Login Successfull");
                 userModel.setLoginStatus(true);
+                res.put("userId",userModel.getUserId());
+                res.put("UserType",userModel.getUserType());
                 return res;
             }
 
@@ -262,6 +277,8 @@ public class UserService {
         {
                 res.put("response","true");
                 res.put("Message","Login Successfull");
+                res.put("compId",companyModel.getCompId());
+                res.put("compName",companyModel.getCompName());
                 return res;
         }
 
@@ -428,19 +445,17 @@ public class UserService {
         UserModel userModel1=knowUserModel(userId);
         articlesModelList=articleRepository.findAllByUserModelNotAndDeptId(userModel1,deptId,pageable);
         res.put("response","true");
-      //  List<UserModel> userModels=new ArrayList<>();
-        /*for (int i = 0; i <articlesModelList.size() ; i++) {
+        List<String> userInfo=new ArrayList<>();
+        List<Integer> comments=new ArrayList<>();
+        for (int i = 0; i <articlesModelList.size() ; i++) {
          //articlesModelList.get(i).setUserModel(userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
-            userModels.add(i,userRepository.findByUserId(userId));
-        }*/
+            comments.add(i,  commentRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
+            userInfo.add(i,userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
+        }
         res.put("ArticleList",articlesModelList);
-       // res.put("corresponding user info",userModels);
+        res.put("numberOfCommmentsList",comments);
+        res.put("corresponding user info",userInfo);
         return res;
-
-        //
-       /* byte[] imageByte=imgsrc;
-        Base64DecodeMultiPart*/
-        //
     }
 
 
@@ -451,11 +466,12 @@ public class UserService {
         List<CommentModel> commentModelList=new ArrayList<>();
         commentModelList=commentRepository.findAllByArticleId(article_id,pageable);
         res.put("response","true");
-        /*for (int i = 0; i <commentModelList.size() ; i++) {
-            commentModelList.get(i).setUserModel(userRepository.findByUserId(commentModelList.get(i).getUserModel().getUserId()));
-        }*/
+        List<String> userInfo=new ArrayList<>();
+        for (int i = 0; i <commentModelList.size() ; i++) {
+            userInfo.add(i,userRepository.findByUserId(commentModelList.get(i).getUserModel().getUserId()));
+        }
         res.put("CommentList",commentModelList);
-
+        res.put("corresponding user info",userInfo);
         return res;
     }
 
@@ -469,13 +485,14 @@ public class UserService {
         UserModel userModel1=knowUserModel(userId);
         doubtModelList=doubtRepository.findAllByUserModelNotAndDeptId(userModel1,departmentID,pageable);
         res.put("response","true");
+        List<String> userInfo=new ArrayList<>();
         for (int i = 0; i <doubtModelList.size() ; i++) {
             noOfAnswer.add(i,answerRepository.findByDoubtId(doubtModelList.get(i).getDoubtId()));
-           // doubtModelList.get(i).setUserModel(userRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
+            userInfo.add(i,userRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
         }
         res.put("Doubtlist",doubtModelList);
         res.put("no Of Corresponding Answers",noOfAnswer);
-
+        res.put("corresponding user info",userInfo);
         return res;
     }
 
@@ -486,12 +503,13 @@ public class UserService {
 
         List<AnswerModel> ansewerList=new ArrayList<>();
         ansewerList=answerRepository.findAllByDoubtId(doubtId,pageable);
-       /* for (int i = 0; i <ansewerList.size() ; i++) {
-            ansewerList.get(i).setUserModel(userRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
-        }*/
+        List<String> userInfo=new ArrayList<>();
+        for (int i = 0; i <ansewerList.size() ; i++) {
+            userInfo.add(i,userRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
+        }
         res.put("response","true");
         res.put("Answer List",ansewerList);
-
+        res.put("corresponding user info",userInfo);
         return res;
     }
     // END OF RETRIEVAL
@@ -529,5 +547,14 @@ public class UserService {
     }
 
 
+    public String getComapnyList() {
+        String response=companyRepository.findString();
+        return response;
+    }
 
+    public Object getYearWisePlacement(long comp_id) {
+        Object response=studentRepository.findByCompId(comp_id);
+        return response;
+
+    }
 }
