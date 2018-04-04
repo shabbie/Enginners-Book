@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.7.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Mar 31, 2018 at 05:52 PM
--- Server version: 5.7.19
--- PHP Version: 5.6.31
+-- Host: 127.0.0.1
+-- Generation Time: Apr 04, 2018 at 07:33 PM
+-- Server version: 10.1.25-MariaDB
+-- PHP Version: 7.1.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -28,15 +28,13 @@ SET time_zone = "+00:00";
 -- Table structure for table `address`
 --
 
-DROP TABLE IF EXISTS `address`;
-CREATE TABLE IF NOT EXISTS `address` (
+CREATE TABLE `address` (
   `user_id` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `street` varchar(20) NOT NULL,
   `city` varchar(15) NOT NULL,
   `pincode` int(6) NOT NULL,
   `state` varchar(15) NOT NULL,
-  `country` varchar(15) NOT NULL,
-  PRIMARY KEY (`user_id`)
+  `country` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -52,18 +50,16 @@ INSERT INTO `address` (`user_id`, `street`, `city`, `pincode`, `state`, `country
 -- Table structure for table `answers`
 --
 
-DROP TABLE IF EXISTS `answers`;
-CREATE TABLE IF NOT EXISTS `answers` (
-  `answer_id` int(14) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `answers` (
+  `answer_id` int(14) NOT NULL,
   `doubt_id` int(14) NOT NULL,
   `user_id` int(10) NOT NULL,
   `text` varchar(1000) NOT NULL,
   `upvotes` int(11) NOT NULL,
   `downvotes` int(11) NOT NULL,
   `answer_image` varchar(35) DEFAULT NULL,
-  `create_time` bigint(20) NOT NULL,
-  PRIMARY KEY (`answer_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  `create_time` bigint(20) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `answers`
@@ -80,18 +76,16 @@ INSERT INTO `answers` (`answer_id`, `doubt_id`, `user_id`, `text`, `upvotes`, `d
 -- Table structure for table `articles`
 --
 
-DROP TABLE IF EXISTS `articles`;
-CREATE TABLE IF NOT EXISTS `articles` (
+CREATE TABLE `articles` (
   `user_id` int(10) NOT NULL,
   `dept_id` int(11) NOT NULL,
-  `article_id` int(14) NOT NULL AUTO_INCREMENT COMMENT '14 is the length of article id',
+  `article_id` int(14) NOT NULL COMMENT '14 is the length of article id',
   `likes` int(11) NOT NULL,
   `article_type` int(3) NOT NULL,
   `article_text` varchar(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `article_image` varchar(35) DEFAULT NULL,
-  `create_time` bigint(20) NOT NULL,
-  PRIMARY KEY (`article_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  `create_time` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `articles`
@@ -110,16 +104,14 @@ INSERT INTO `articles` (`user_id`, `dept_id`, `article_id`, `likes`, `article_ty
 -- Table structure for table `college`
 --
 
-DROP TABLE IF EXISTS `college`;
-CREATE TABLE IF NOT EXISTS `college` (
+CREATE TABLE `college` (
   `user_id` varchar(10) NOT NULL,
   `univ_id` varchar(5) NOT NULL,
   `colg_id` int(3) NOT NULL,
   `colg_name` text NOT NULL,
   `website` varchar(40) NOT NULL,
   `tpo_no` bigint(13) NOT NULL,
-  `tpo_name` text NOT NULL,
-  PRIMARY KEY (`colg_id`)
+  `tpo_name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -128,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `college` (
 
 INSERT INTO `college` (`user_id`, `univ_id`, `colg_id`, `colg_name`, `website`, `tpo_no`, `tpo_name`) VALUES
 ('1', '1', 41, 'SVIT', 'svitvasad.ac.in', 9999999999, 'Ajit Shah'),
-('18', '2154', 42, 'svit', 'www.svit.com', 0, 'ajit shah'),
+('18', '2154', 42, 'parul', 'www.svit.com', 0, 'ajit shah'),
 ('21', '2154', 43, 'svi', 'www.svit.com', 0, 'ajit shah');
 
 -- --------------------------------------------------------
@@ -137,24 +129,22 @@ INSERT INTO `college` (`user_id`, `univ_id`, `colg_id`, `colg_name`, `website`, 
 -- Table structure for table `comments`
 --
 
-DROP TABLE IF EXISTS `comments`;
-CREATE TABLE IF NOT EXISTS `comments` (
+CREATE TABLE `comments` (
   `article_id` int(14) NOT NULL,
-  `comment_id` int(14) NOT NULL AUTO_INCREMENT,
+  `comment_id` int(14) NOT NULL,
   `user_id` int(10) NOT NULL,
   `text` varchar(1000) NOT NULL,
-  `create_time` bigint(20) NOT NULL,
-  PRIMARY KEY (`comment_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  `create_time` bigint(20) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `comments`
 --
 
 INSERT INTO `comments` (`article_id`, `comment_id`, `user_id`, `text`, `create_time`) VALUES
-(1, 1, 1, 'My comment', 0),
-(1, 2, 2, 'this is my comment', 0),
-(1, 3, 3, 'my comment', 1521964146798);
+(3, 1, 1, 'My comment', 0),
+(2, 2, 2, 'this is my comment', 0),
+(2, 3, 3, 'my comment', 1521964146798);
 
 -- --------------------------------------------------------
 
@@ -162,17 +152,14 @@ INSERT INTO `comments` (`article_id`, `comment_id`, `user_id`, `text`, `create_t
 -- Table structure for table `company`
 --
 
-DROP TABLE IF EXISTS `company`;
-CREATE TABLE IF NOT EXISTS `company` (
+CREATE TABLE `company` (
   `comp_id` varchar(10) NOT NULL,
   `comp_name` varchar(30) NOT NULL,
   `contact` bigint(20) NOT NULL,
   `address` text NOT NULL,
   `hr_name` varchar(35) NOT NULL,
   `hr_contact` bigint(20) NOT NULL,
-  `domain` varchar(40) DEFAULT NULL COMMENT 'csv''s of the technologies nd all',
-  PRIMARY KEY (`comp_name`),
-  UNIQUE KEY `comp_name` (`comp_name`)
+  `domain` varchar(40) DEFAULT NULL COMMENT 'csv''s of the technologies nd all'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -181,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `company` (
 
 INSERT INTO `company` (`comp_id`, `comp_name`, `contact`, `address`, `hr_name`, `hr_contact`, `domain`) VALUES
 ('723', 'gateway', 90232238233, 'amdavad', 'shahsha', 28714981234, NULL),
-('877124', 'TCS', 812648112, 'malad west, mumbai, maharashtra.', 'Mayank', 923902932, 'all services');
+('877', 'TCS', 812648112, 'malad west, mumbai, maharashtra.', 'Mayank', 923902932, 'all services');
 
 -- --------------------------------------------------------
 
@@ -189,17 +176,12 @@ INSERT INTO `company` (`comp_id`, `comp_name`, `contact`, `address`, `hr_name`, 
 -- Table structure for table `department`
 --
 
-DROP TABLE IF EXISTS `department`;
-CREATE TABLE IF NOT EXISTS `department` (
+CREATE TABLE `department` (
   `dept_id` int(2) NOT NULL COMMENT '2 is std length of dept',
   `dept_name` varchar(20) NOT NULL,
   `hod_name` text NOT NULL,
   `placements` int(3) NOT NULL DEFAULT '0',
-  `colg_id` int(3) NOT NULL,
-  PRIMARY KEY (`dept_id`),
-  UNIQUE KEY `colg_id` (`colg_id`),
-  KEY `dept_id` (`dept_id`),
-  KEY `colg_id_2` (`colg_id`)
+  `colg_id` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -215,9 +197,8 @@ INSERT INTO `department` (`dept_id`, `dept_name`, `hod_name`, `placements`, `col
 -- Table structure for table `doubts`
 --
 
-DROP TABLE IF EXISTS `doubts`;
-CREATE TABLE IF NOT EXISTS `doubts` (
-  `doubt_id` int(14) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `doubts` (
+  `doubt_id` int(14) NOT NULL,
   `user_id` int(10) NOT NULL,
   `dept_id` bigint(20) NOT NULL,
   `heading` varchar(200) NOT NULL,
@@ -226,9 +207,8 @@ CREATE TABLE IF NOT EXISTS `doubts` (
   `tag` varchar(100) NOT NULL,
   `upvotes` int(11) NOT NULL,
   `downvotes` int(11) NOT NULL,
-  `create_time` bigint(20) NOT NULL,
-  PRIMARY KEY (`doubt_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  `create_time` bigint(20) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `doubts`
@@ -250,21 +230,13 @@ INSERT INTO `doubts` (`doubt_id`, `user_id`, `dept_id`, `heading`, `text`, `doub
 -- Table structure for table `faculty`
 --
 
-DROP TABLE IF EXISTS `faculty`;
-CREATE TABLE IF NOT EXISTS `faculty` (
+CREATE TABLE `faculty` (
   `enroll_no` bigint(14) NOT NULL,
   `user_id` int(10) NOT NULL,
   `dept_id` int(2) NOT NULL,
   `colg_id` int(3) NOT NULL,
   `univ_id` int(11) NOT NULL,
-  `ranking` int(3) NOT NULL,
-  PRIMARY KEY (`enroll_no`),
-  UNIQUE KEY `user_id_2` (`user_id`),
-  UNIQUE KEY `enroll_no` (`enroll_no`),
-  KEY `dept_id` (`dept_id`),
-  KEY `colg_id` (`colg_id`),
-  KEY `user_id` (`user_id`),
-  KEY `univ_id` (`univ_id`)
+  `ranking` int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -280,20 +252,13 @@ INSERT INTO `faculty` (`enroll_no`, `user_id`, `dept_id`, `colg_id`, `univ_id`, 
 -- Table structure for table `hod`
 --
 
-DROP TABLE IF EXISTS `hod`;
-CREATE TABLE IF NOT EXISTS `hod` (
+CREATE TABLE `hod` (
   `user_id` int(10) NOT NULL,
   `enroll_no` bigint(12) NOT NULL,
   `dept_id` int(2) NOT NULL,
   `colg_id` int(3) NOT NULL,
   `univ_id` int(11) NOT NULL,
-  `ranking` int(3) NOT NULL,
-  PRIMARY KEY (`enroll_no`),
-  UNIQUE KEY `enroll_id` (`enroll_no`),
-  UNIQUE KEY `user_id` (`user_id`),
-  KEY `dept_id` (`dept_id`),
-  KEY `colg_id` (`colg_id`),
-  KEY `univ_id` (`univ_id`)
+  `ranking` int(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -309,8 +274,7 @@ INSERT INTO `hod` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, `ran
 -- Table structure for table `student`
 --
 
-DROP TABLE IF EXISTS `student`;
-CREATE TABLE IF NOT EXISTS `student` (
+CREATE TABLE `student` (
   `user_id` int(10) NOT NULL COMMENT 'This is a unique id assigned to every user',
   `enroll_no` bigint(12) NOT NULL COMMENT 'every member of universityy is assigned a unique number by it',
   `dept_id` int(2) DEFAULT NULL COMMENT 'dept id ',
@@ -319,24 +283,17 @@ CREATE TABLE IF NOT EXISTS `student` (
   `year_of_passing` int(4) NOT NULL,
   `ranking` int(3) NOT NULL DEFAULT '0',
   `interest` text,
-  `company_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`enroll_no`),
-  UNIQUE KEY `enroll_no_2` (`enroll_no`),
-  UNIQUE KEY `user_id` (`user_id`),
-  KEY `dept_id` (`dept_id`),
-  KEY `colg_id` (`colg_id`),
-  KEY `enroll_no` (`enroll_no`),
-  KEY `univ_id` (`univ_id`)
+  `comp_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, `year_of_passing`, `ranking`, `interest`, `company_name`) VALUES
-(0, 140410107002, 7, 41, 0, 2018, 0, NULL, ''),
-(10, 140410107003, 7, 41, 2154, 2018, 0, NULL, ''),
-(2, 140410107024, 7, 41, 0, 0, 0, NULL, '');
+INSERT INTO `student` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, `year_of_passing`, `ranking`, `interest`, `comp_id`) VALUES
+(0, 140410107002, 7, 41, 0, 2018, 0, NULL, 877),
+(10, 140410107003, 7, 41, 2154, 2017, 0, NULL, 877),
+(2, 140410107024, 7, 42, 0, 2018, 0, NULL, 877);
 
 -- --------------------------------------------------------
 
@@ -344,16 +301,11 @@ INSERT INTO `student` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, 
 -- Table structure for table `university`
 --
 
-DROP TABLE IF EXISTS `university`;
-CREATE TABLE IF NOT EXISTS `university` (
+CREATE TABLE `university` (
   `user_id` varchar(10) NOT NULL,
   `uni_name` varchar(50) NOT NULL,
   `uni_id` varchar(5) NOT NULL,
-  `website` varchar(20) NOT NULL,
-  PRIMARY KEY (`uni_id`),
-  UNIQUE KEY `uni_id` (`uni_id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  UNIQUE KEY `uni_name` (`uni_name`)
+  `website` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -369,9 +321,8 @@ INSERT INTO `university` (`user_id`, `uni_name`, `uni_id`, `website`) VALUES
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
-  `user_id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user` (
+  `user_id` int(10) NOT NULL,
   `password` varchar(16) NOT NULL,
   `login_status` tinyint(1) NOT NULL,
   `fname` varchar(20) NOT NULL,
@@ -382,12 +333,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(25) NOT NULL,
   `contact` bigint(13) NOT NULL,
   `address` text NOT NULL,
-  `user_type` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_id` (`user_id`),
-  UNIQUE KEY `email` (`email`),
-  KEY `email_2` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+  `user_type` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
@@ -405,7 +352,145 @@ INSERT INTO `user` (`user_id`, `password`, `login_status`, `fname`, `lname`, `pr
 (18, '123456', 0, 'jayesh', 'deshkar', NULL, 0, '15-09-1966', 'avc@gab.com', 9033257755, 'anand', NULL),
 (21, '123456', 0, 'jayesh', 'deshkar', NULL, 0, '15-09-1966', 'avc@ga.com', 9033257759, 'anand', NULL),
 (22, '123456', 0, 'ni', 'pa', NULL, 0, '15-09-1966', 'avc@gaqb.com', 9033257744, 'amdavad', NULL);
-COMMIT;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `address`
+--
+ALTER TABLE `address`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `answers`
+--
+ALTER TABLE `answers`
+  ADD PRIMARY KEY (`answer_id`);
+
+--
+-- Indexes for table `articles`
+--
+ALTER TABLE `articles`
+  ADD PRIMARY KEY (`article_id`);
+
+--
+-- Indexes for table `college`
+--
+ALTER TABLE `college`
+  ADD PRIMARY KEY (`colg_id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`comment_id`);
+
+--
+-- Indexes for table `company`
+--
+ALTER TABLE `company`
+  ADD PRIMARY KEY (`comp_name`),
+  ADD UNIQUE KEY `comp_name` (`comp_name`);
+
+--
+-- Indexes for table `department`
+--
+ALTER TABLE `department`
+  ADD PRIMARY KEY (`dept_id`),
+  ADD UNIQUE KEY `colg_id` (`colg_id`),
+  ADD KEY `dept_id` (`dept_id`),
+  ADD KEY `colg_id_2` (`colg_id`);
+
+--
+-- Indexes for table `doubts`
+--
+ALTER TABLE `doubts`
+  ADD PRIMARY KEY (`doubt_id`);
+
+--
+-- Indexes for table `faculty`
+--
+ALTER TABLE `faculty`
+  ADD PRIMARY KEY (`enroll_no`),
+  ADD UNIQUE KEY `user_id_2` (`user_id`),
+  ADD UNIQUE KEY `enroll_no` (`enroll_no`),
+  ADD KEY `dept_id` (`dept_id`),
+  ADD KEY `colg_id` (`colg_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `univ_id` (`univ_id`);
+
+--
+-- Indexes for table `hod`
+--
+ALTER TABLE `hod`
+  ADD PRIMARY KEY (`enroll_no`),
+  ADD UNIQUE KEY `enroll_id` (`enroll_no`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD KEY `dept_id` (`dept_id`),
+  ADD KEY `colg_id` (`colg_id`),
+  ADD KEY `univ_id` (`univ_id`);
+
+--
+-- Indexes for table `student`
+--
+ALTER TABLE `student`
+  ADD PRIMARY KEY (`enroll_no`),
+  ADD UNIQUE KEY `enroll_no_2` (`enroll_no`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD KEY `dept_id` (`dept_id`),
+  ADD KEY `colg_id` (`colg_id`),
+  ADD KEY `enroll_no` (`enroll_no`),
+  ADD KEY `univ_id` (`univ_id`);
+
+--
+-- Indexes for table `university`
+--
+ALTER TABLE `university`
+  ADD PRIMARY KEY (`uni_id`),
+  ADD UNIQUE KEY `uni_id` (`uni_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `uni_name` (`uni_name`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `email_2` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `answers`
+--
+ALTER TABLE `answers`
+  MODIFY `answer_id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `articles`
+--
+ALTER TABLE `articles`
+  MODIFY `article_id` int(14) NOT NULL AUTO_INCREMENT COMMENT '14 is the length of article id', AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `comment_id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `doubts`
+--
+ALTER TABLE `doubts`
+  MODIFY `doubt_id` int(14) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
