@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abhishekkoranne.engineersbook.Activity.ApprovalActivity;
 import com.example.abhishekkoranne.engineersbook.Activity.ArticleActivity;
@@ -19,10 +21,13 @@ import com.example.abhishekkoranne.engineersbook.Activity.ProfileActivity;
 import com.example.abhishekkoranne.engineersbook.Fragment.ArticlesFragment;
 import com.example.abhishekkoranne.engineersbook.R;
 import com.example.abhishekkoranne.engineersbook.model.Article;
+import com.google.gson.JsonElement;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import org.json.JSONArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,12 +46,14 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
     String[] no_of_shares;
     int[] images;*/
 
+    Object[] no_of_comments;
     ArrayList<Article> articleList = new ArrayList<>();
     DisplayImageOptions options;
     ImageLoader imgloader;
+    static int i,j=0;
 
 
-    public ArticlesAdapter(Context cont, ArrayList<Article> articleList) {
+    public ArticlesAdapter(Context cont, ArrayList<Article> articleList, Object no_of_comments,int size) {
         this.cont = cont;
         /*this.images = images;
         this.user_name = user_name;
@@ -55,6 +62,10 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
         this.no_of_shares = no_of_shares;
         this.text_post = text_data;*/
         this.articleList = articleList;
+        this.no_of_comments=new Object[size];
+        this.no_of_comments[i] = no_of_comments;
+        Log.d("error","he"+this.no_of_comments[i]);
+        i++;
         options = new DisplayImageOptions.Builder().build();
         imgloader = ImageLoader.getInstance();
     }
@@ -133,7 +144,18 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
         holder.timestamp.setText(strDate);
         int midOfTextPost = articleList.get(position).getArticle_text_post().length() / 2;
         holder.text_post.setText("" + articleList.get(position).getArticle_text_post().substring(0, midOfTextPost) + " ...see more");
-        holder.no_of_comments.setText("" + articleList.get(position).getCommentList().size() + " comments");
+
+
+        // JsonElement[] elements=new JsonElement[arr1.];
+ /*       String noOfComments=""+no_of_comments[j];
+        int dot=noOfComments.indexOf('.');
+        noOfComments=noOfComments.substring(0,dot);
+ */     //  j++;
+
+
+        holder.no_of_comments.setText("" +no_of_comments[j] + " comments");
+        j++;
+
         holder.no_of_likes.setText("" + articleList.get(position).getLikes() + " likes");
 
         holder.button_comment.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +195,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
         });
     }
 
+
     @Override
     public int getItemCount() {
         return articleList.size();
@@ -181,7 +204,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
     public class ArticlesViewHolder extends RecyclerView.ViewHolder {
         ImageView profile_pic, image_post;
         TextView user_name, timestamp, text_post, no_of_comments, no_of_likes;
-        Button button_comment,button_share;
+        Button button_comment, button_share;
         LinearLayout layout_article_item;
 
         public ArticlesViewHolder(View itemView) {
@@ -195,7 +218,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
             no_of_comments = (TextView) itemView.findViewById(R.id.no_of_comments);
             no_of_likes = (TextView) itemView.findViewById(R.id.no_of_likes);
             button_comment = (Button) itemView.findViewById(R.id.button_comment);
-            button_share= (Button) itemView.findViewById(R.id.button_share);
+            button_share = (Button) itemView.findViewById(R.id.button_share);
         }
     }
 }
