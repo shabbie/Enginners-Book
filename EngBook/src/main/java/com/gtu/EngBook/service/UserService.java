@@ -35,6 +35,10 @@ public class UserService {
     private CompanyRepository companyRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private CollegeRepository collegeRepository;
+    @Autowired
+    private UniversityRepository universityRepository;
 
     public UserModel knowUserModel(Long userId){
         return userRepository.findByUserId(userId);
@@ -76,7 +80,7 @@ public class UserService {
 
 
         res.put("response","true");
-        res.put("Message","Updation Successfull");
+        res.put("message","Updation Successfull");
 
         return res;
     }
@@ -89,7 +93,7 @@ public class UserService {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
-        while (salt.length() < 6) { // length of the random string.
+        while (salt.length() <= 6) { // length of the random string.
             int index = (int) (rnd.nextFloat() * SALTCHARS.length());
             salt.append(SALTCHARS.charAt(index));
         }
@@ -104,23 +108,24 @@ public class UserService {
         this.articleRepository = articleRepository;
     }
 
-    public Map<String,Object> studentRegister(UserModel userModel, StudentModel studentModel)
-    {
+    public Map<String,Object> studentRegister(UserModel userModel, StudentModel studentModel) throws IOException {
         Map<String,Object> res = new HashMap<>();
 
-        if(userRepository.findOneByEmail(userModel.getEmail())!=null)
+        String email=userModel.getEmail();
+        if(userRepository.findOneByEmail(email)!=null)
         {
             res.put("response","false");
-            res.put("Message","UserAlready Registered");
+            res.put("message","User Already Registered");
             return res;
         }
+        //res=sendEmail(res);
 
         userModel.setStudentModel(studentModel);
         studentModel.setUserModel(userModel);
 
         userRepository.save(userModel);
         res.put("response","true");
-        res.put("Message","Registration Successfull");
+        res.put("message","Registration Successfull");
         res.put("user_id",userModel.getUserId());
         res.put("profile_pic",userModel.getProfilePic());
 
@@ -128,44 +133,44 @@ public class UserService {
     }
 
 
-    public Map<String,Object> facultyRegister(UserModel userModel, FacultyModel facultyModel) {
+    public Map<String,Object> facultyRegister(UserModel userModel, FacultyModel facultyModel) throws IOException {
         Map<String,Object> res = new HashMap<>();
 
         if(userRepository.findOneByEmail(userModel.getEmail())!=null)
         {
             res.put("response","false");
-            res.put("Message","UserAlready Registered");
+            res.put("message","UserAlready Registered");
             return res;
         }
-
+        //res=sendEmail(res);
         userModel.setFacultyModel(facultyModel);
         facultyModel.setUserModel(userModel);
 
         userRepository.save(userModel);
         res.put("response","true");
-        res.put("Message","Registration Successfull");
+        res.put("message","Registration Successfull");
         res.put("user_id",userModel.getUserId());
         res.put("profile_pic",userModel.getProfilePic());
 
         return res;
     }
 
-    public Map<String,Object> hodRegister(UserModel userModel, HodModel hodModel) {
+    public Map<String,Object> hodRegister(UserModel userModel, HodModel hodModel) throws IOException {
         Map<String,Object> res = new HashMap<>();
 
         if(userRepository.findOneByEmail(userModel.getEmail())!=null)
         {
             res.put("response","false");
-            res.put("Message","UserAlready Registered");
+            res.put("message","UserAlready Registered");
             return res;
         }
-
+        //res=sendEmail(res);
         userModel.setHodModel(hodModel);
         hodModel.setUserModel(userModel);
 
         userRepository.save(userModel);
         res.put("response","true");
-        res.put("Message","Registration Successfull");
+        res.put("message","Registration Successfull");
         res.put("user_id",userModel.getUserId());
         res.put("profile_pic",userModel.getProfilePic());
 
@@ -178,7 +183,7 @@ public class UserService {
         if(userRepository.findOneByEmail(userModel.getEmail())!=null)
         {
             res.put("response","false");
-            res.put("Message","UserAlready Registered");
+            res.put("message","UserAlready Registered");
             return res;
         }
 
@@ -188,7 +193,7 @@ public class UserService {
         userRepository.save(userModel);
 
         res.put("response","true");
-        res.put("Message","Registration Successfull");
+        res.put("message","Registration Successfull");
         res.put("user_id",userModel.getUserId());
         res.put("profile_pic",userModel.getProfilePic());
 
@@ -203,7 +208,7 @@ public class UserService {
         if(userRepository.findOneByEmail(userModel.getEmail())!=null)
         {
             res.put("response","false");
-            res.put("Message","UserAlready Registered");
+            res.put("message","UserAlready Registered");
             return res;
         }
 
@@ -212,7 +217,7 @@ public class UserService {
 
         userRepository.save(userModel);
         res.put("response","true");
-        res.put("Message","Registration Successfull");
+        res.put("message","Registration Successfull");
         res.put("user_id",userModel.getUserId());
         res.put("profile_pic",userModel.getProfilePic());
 
@@ -225,13 +230,13 @@ public class UserService {
         if(companyRepository.findBycompId(companyModel.getCompId())!=null)
         {
             res.put("response","false");
-            res.put("Message","Company Already Registered");
+            res.put("message","Company Already Registered");
             return res;
         }
 
         companyRepository.save(companyModel);
         res.put("response","true");
-        res.put("Message","Registration Successfull");
+        res.put("message","Registration Successfull");
 
         return res;
     }
@@ -246,17 +251,24 @@ public class UserService {
         if(userModel!=null)
         {
             if(userModel.getPassword().equals(password)){
-                res.put("response","true");
-                res.put("Message","Login Successfull");
-                userModel.setLoginStatus(true);
-                res.put("userId",userModel.getUserId());
-                res.put("UserType",userModel.getUserType());
-                return res;
+                if(userModel.isApproved()) {
+                    res.put("response", "true");
+                    res.put("message", "Login Successfull");
+                    userModel.setLoginStatus(true);
+                    res.put("userId", userModel.getUserId());
+                    res.put("userType", userModel.getUserType());
+                    return res;
+                }
+                else {
+                    res.put("response", "false");
+                    res.put("message", "User Not Approved");
+                    return res;
+                }
             }
 
             else {
                 res.put("response","false");
-                res.put("Message","Invalid Password");
+                res.put("message","Invalid Password");
                 return res;
             }
         }
@@ -264,7 +276,7 @@ public class UserService {
         else
         {
             res.put("response","false");
-            res.put("Message","Email Id is not Registered");
+            res.put("message","Email Id is not Registered");
             return res;
         }
     }
@@ -276,7 +288,7 @@ public class UserService {
         if(companyModel!=null)
         {
                 res.put("response","true");
-                res.put("Message","Login Successfull");
+                res.put("message","Login Successfull");
                 res.put("compId",companyModel.getCompId());
                 res.put("compName",companyModel.getCompName());
                 return res;
@@ -285,13 +297,41 @@ public class UserService {
         else
         {
             res.put("response","false");
-            res.put("Message","company Id is not Registered");
+            res.put("message","company Id is not Registered");
             return res;
         }
 
     }
 
     //==========  LOGIN COMPLETES  ===============
+
+
+
+    private Map<String,Object> sendEmail(Map<String,Object> res) throws IOException {
+        Email from = new Email("theengineersbook@gmail.com");
+        String subject = "Mail from Engineer's Book";
+        Email to = new Email("abhishekkoranne@gmail.com");
+        String token=getSaltString();
+        Content content = new Content("text/plain", "PLease do not reply to this mail."+
+                " The token is "+token);
+        Mail mail = new Mail(from, subject, to, content);
+
+        SendGrid sg = new SendGrid("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");
+        Request request = new Request();
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            Response response = sg.api(request);
+            res.put("statuscode",response.getStatusCode());
+            res.put("body",response.getBody());
+            res.put("header",response.getHeaders());
+            res.put("response",true);
+        } catch (IOException ex) {
+            throw ex;
+        }
+        return res;
+    }
 
 //forgot password
     public Map<String,Object> forgotpassword(String email) throws IOException {
@@ -300,11 +340,12 @@ public class UserService {
         if(userModel!=null)
         {
             Email from = new Email("theengineersbook@gmail.com");
-            String subject = "This is a test email";
-            Email to = new Email("abhishekkoranne@gmail.com");
+            String subject = "OTP for your request";
+            Email to = new Email(email);
             String token=getSaltString();
+            userModel.setToken(token);
             Content content = new Content("text/plain", "PLease do not reply to this mail."+
-            " The token is "+token);
+                    " The OTP is "+token);
             Mail mail = new Mail(from, subject, to, content);
 
             SendGrid sg = new SendGrid("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");
@@ -322,20 +363,54 @@ public class UserService {
                 throw ex;
             }
         }
-        else res.put("Message","Email Id not yet Registered");
+        else res.put("message","Email Id not yet Registered");
+
+        return res;
+    }
+    public Map<String,Object> checkToken(String token,String email) {
+        UserModel userModel=userRepository.findOneByEmail(email);
+        Map<String,Object> res = new HashMap<>();
+        if (userModel.getToken().equals(token))
+        {res.put("response",true);  }
+        else res.put("response",false);
 
         return res;
     }
 
 //UPDATING
 
+    public Map<String,Object> approve(Long user_id) {
+        Map<String,Object> res = new HashMap<>();
+
+        UserModel userModel=userRepository.findByUserId(user_id);
+        userModel.setApproved(true);
+
+        userRepository.save(userModel);
+
+        return res;
+    }
+
+    public Map<String,Object> disApprove(Long user_id) {
+        Map<String,Object> res = new HashMap<>();
+
+        UserModel userModel=userRepository.findByUserId(user_id);
+        userModel.setApproved(false);
+
+        userRepository.save(userModel);
+
+        return res;
+    }
+
     //update likes
-    public Map<String,Object> updateLikes(Long articleId){
+    public Map<String,Object> updateLikes(Long articleId,String type){
         Map<String,Object> res = new HashMap<>();
 
         ArticlesModel articlesModel=articleRepository.findByArticleId(articleId);
         if(articlesModel!=null) {
+            if(type.equalsIgnoreCase("up"))
             articlesModel.setLikes(articlesModel.getLikes() + 1);
+            else if (type.equalsIgnoreCase("down"))
+                articlesModel.setLikes(articlesModel.getLikes() - 1);
             res.put("response", true);
             return res;
         }
@@ -491,7 +566,7 @@ public class UserService {
             userInfo.add(i,userRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
         }
         res.put("Doubtlist",doubtModelList);
-        res.put("no Of Corresponding Answers",noOfAnswer);
+        res.put("noOfCorrespondingAnswers",noOfAnswer);
         res.put("corresponding user info",userInfo);
         return res;
     }
@@ -508,8 +583,8 @@ public class UserService {
             userInfo.add(i,userRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
         }
         res.put("response","true");
-        res.put("Answer List",ansewerList);
-        res.put("corresponding user info",userInfo);
+        res.put("answerList",ansewerList);
+        res.put("correspondingUserInfo",userInfo);
         return res;
     }
     // END OF RETRIEVAL
@@ -552,9 +627,42 @@ public class UserService {
         return response;
     }
 
-    public Object getYearWisePlacement(long comp_id) {
-        Object response=studentRepository.findByCompId(comp_id);
-        return response;
+    public Map<String,Object> getYearWisePlacement(long comp_id) {
+        Map<String,Object> res = new HashMap<>();
+        List<Object[]> studentModel=studentRepository.findByCompId(comp_id);
+        res.put("response",true);
+        res.put("info",studentModel);
+        return res;
 
     }
+
+    public Object getDeptWisePlacement(long comp_id) {
+        Object response=studentRepository.findByDeptCompId(comp_id);
+        return response;
+    }
+
+    public Object getstudentPlacementList(long comp_id,int yop,long colg_id) {
+        Object response=studentRepository.findByStudentCompId(comp_id,yop,colg_id);
+        return response;
+    }
+
+    public Object getstudentPlacementListDept(long comp_id, int year_of_passing, long colg_id, long dept_id) {
+        Object response=studentRepository.findByStudentCompIdDept(comp_id,year_of_passing,colg_id,dept_id);
+        return response;
+    }
+
+
+    public long getDeptId(String dept_name) {
+        return departmentRepository.findByDeptName(dept_name);
+    }
+
+    public int getColgId(String colg_name) {
+        return collegeRepository.findByColgName(colg_name);
+    }
+
+    public int getUnivId(String univ_name) {
+        return universityRepository.findByUniName(univ_name);
+    }
+
+
 }

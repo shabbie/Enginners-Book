@@ -31,6 +31,7 @@ public class UserController
 {
 	@Autowired
 	UserService userService;
+	
 
 
 	//									======PROFILE======
@@ -67,7 +68,7 @@ public class UserController
 
 	// 							=======RETIEVAL============
 
-	//							=========Company==========
+	//							=========  COMPANY  ==========
 	@RequestMapping(value = "/getcompanylist")
 	public Map<String,Object> ComapanyList(HttpServletRequest request)
 	{
@@ -87,6 +88,42 @@ public class UserController
 		return response;
 	}
 
+	@RequestMapping(value = "/getdeptplacement")
+	public Map<String,Object> DeptWisePlacement(HttpServletRequest request)
+	{
+		HashMap<String,Object> response=new HashMap<>();
+
+		userService.getDeptWisePlacement(Long.parseLong(request.getParameter("comp_id")));
+
+		return response;
+	}
+
+	@RequestMapping(value = "/getstudentplacementlist")
+	public Map<String,Object> studentPlacementList(HttpServletRequest request)
+	{
+		HashMap<String,Object> response=new HashMap<>();
+
+		userService.getstudentPlacementList(
+				Long.parseLong(request.getParameter("comp_id")),
+				Integer.parseInt(request.getParameter("year_of_passing")),
+				Long.parseLong(request.getParameter("colg_id")));
+
+		return response;
+	}
+
+	@RequestMapping(value = "/getstudentplacementlistdept")
+	public Map<String,Object> studentPlacementListDept(HttpServletRequest request)
+	{
+		HashMap<String,Object> response=new HashMap<>();
+
+		userService.getstudentPlacementListDept(
+				Long.parseLong(request.getParameter("comp_id")),
+				Integer.parseInt(request.getParameter("year_of_passing")),
+				Long.parseLong(request.getParameter("colg_id")),
+				Long.parseLong(request.getParameter(("dept_id"))));
+
+		return response;
+	}
 
 
 
@@ -112,11 +149,16 @@ public class UserController
 		MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest)req;
 		mresponse.put("images response",userService.setImage(req,mrequest,"studentprofile"));
 
-		studentModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
-		studentModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
-		studentModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
+		String dept_name= req.getParameter("dept_name");
+		studentModel.setDept_id((int) userService.getDeptId(dept_name));
+
+		String colg_name=req.getParameter("colg_name");
+		studentModel.setColg_id(userService.getColgId(colg_name));
+
+		String univ_name=req.getParameter("univ_name");
+		studentModel.setUnivId(userService.getUnivId(univ_name));
+
 		studentModel.setInterest(req.getParameter("interest)"));
-		studentModel.setCompanyId(req.getParameter("comp_id"));
 
 		studentModel.setYear_of_passing(Integer.parseInt( req.getParameter("yop")));
 		userModel.setPassword(req.getParameter("pass"));
@@ -143,9 +185,16 @@ public class UserController
 		userModel.setAddress(req.getParameter("addr"));
 		userModel.setContact(Long.parseLong( req.getParameter("contact")));
 		userModel.setEmail(req.getParameter("email"));
-		facultyModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
-        facultyModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
-        facultyModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
+
+		String dept_name= req.getParameter("dept_name");
+		facultyModel.setDept_id((int) userService.getDeptId(dept_name));
+
+		String colg_name=req.getParameter("colg_name");
+		facultyModel.setColg_id(userService.getColgId(colg_name));
+
+		String univ_name=req.getParameter("univ_name");
+		facultyModel.setUnivId(userService.getUnivId(univ_name));
+
         userModel.setPassword(req.getParameter("pass"));
 
         mresponse.put("Faculty Resgistration",userService.facultyRegister(userModel,facultyModel));
@@ -171,9 +220,15 @@ public class UserController
 		userModel.setContact(Long.parseLong( req.getParameter("contact")));
 		userModel.setEmail(req.getParameter("email"));
 
-        hodModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
-        hodModel.setColg_id(Integer.parseInt(req.getParameter("colg_id")));
-        hodModel.setUnivId(Integer.parseInt(req.getParameter("univ_id")));
+		String dept_name= req.getParameter("dept_name");
+		hodModel.setDept_id((int) userService.getDeptId(dept_name));
+
+		String colg_name=req.getParameter("colg_name");
+		hodModel.setColg_id(userService.getColgId(colg_name));
+
+		String univ_name=req.getParameter("univ_name");
+		hodModel.setUnivId(userService.getUnivId(univ_name));
+
         userModel.setPassword(req.getParameter("pass"));
 
         mresponse.put("Hod Registration",userService.hodRegister(userModel,hodModel));
@@ -202,8 +257,13 @@ public class UserController
 		collegeModel.setWebsite(req.getParameter("website"));
 		collegeModel.setTpo_name(req.getParameter("tponame"));
 		collegeModel.setColg_name(req.getParameter("colg_name"));
-		collegeModel.setColgId(Integer.parseInt(req.getParameter("colg_id")));
-        collegeModel.setUniv_id(Integer.parseInt(req.getParameter("univ_id")));
+
+
+		String colg_name=req.getParameter("colg_name");
+		collegeModel.setColgId(userService.getColgId(colg_name));
+
+		String univ_name=req.getParameter("univ_name");
+		collegeModel.setUniv_id(userService.getUnivId(univ_name));
 
 		mresponse.put("Principal Registration",userService.principalRegister(userModel,collegeModel));
 
@@ -232,7 +292,10 @@ public class UserController
 
 		universityModel.setUniv_name(req.getParameter("univname"));
 		universityModel.setWebsite(req.getParameter("univwebsite"));
-		universityModel.setUniv_id(Integer.parseInt(req.getParameter("uniid")));
+
+
+		String univ_name=req.getParameter("univ_name");
+		universityModel.setUniv_id(userService.getUnivId(univ_name));
 
 		mresponse.put("Chancellor Registration",userService.chancellorRegister(userModel,universityModel));
 
@@ -293,9 +356,15 @@ FORGOT PASSSwORD
 			String email=req.getParameter("email");
 			map=userService.forgotpassword(email);
 
-
         return map;
     }
+
+    @RequestMapping(value = "/checktoken")
+	public Map<String,Object> checkToken(HttpServletRequest request)
+	{
+
+		return userService.checkToken(request.getParameter("token"),request.getParameter("email"));
+	}
 
     // UPDATING
 
@@ -303,7 +372,8 @@ FORGOT PASSSwORD
     @RequestMapping(value = "/updatelikes")
 	public Map<String, Object> updateLikes(HttpServletRequest req) {
 
-		return userService.updateLikes( Long.parseLong(req.getParameter("article_id")));
+		return userService.updateLikes( Long.parseLong(req.getParameter("article_id")),
+				req.getParameter("type"));
 	}
 
 	@RequestMapping(value = "/doubt/downvote")
@@ -461,6 +531,22 @@ FORGOT PASSSwORD
         answerModel.setCreateTime(System.currentTimeMillis());
 
 		return userService.addAnswer(answerModel);
+	}
+
+	@RequestMapping(value = "/approve")
+	public Map<String ,Object> approve(HttpServletRequest request) {
+		Map<String, Object> mresponse = new HashMap<>();
+
+
+		return userService.approve(Long.parseLong(request.getParameter("user_id")));
+	}
+
+	@RequestMapping(value = "/disapprove")
+	public Map<String ,Object> disApprove(HttpServletRequest request) {
+		Map<String, Object> mresponse = new HashMap<>();
+
+
+		return userService.disApprove(Long.parseLong(request.getParameter("user_id")));
 	}
 
 }

@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<UserModel, String > {
     public UserModel findOneByEmail(String email);
     public UserModel findByUserId(Long user_id);
 
-    @Query(value = "SELECT fname,lname,profile_pic FROM user WHERE user_id= :user_id", nativeQuery = true)
+    @Query(value = "SELECT user_id,fname,lname,profile_pic FROM user WHERE user_id= :user_id", nativeQuery = true)
     public String findByUserId(@Param("user_id") long user_id);
 }

@@ -50,6 +50,12 @@ public class UserModel implements Serializable {
     @Column(name = "user_type")
     private String userType;
 
+    @Column(name = "approved")
+    private boolean approved;
+
+    @Column(name = "token")
+    private String token;
+
 
     // Relationship
     @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
@@ -269,6 +275,22 @@ public class UserModel implements Serializable {
         this.commentModel = commentModel;
     }
 
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     /**
      *
      * @param userId
@@ -283,6 +305,8 @@ public class UserModel implements Serializable {
      * @param contact
      * @param address
      * @param userType
+     * @param approved
+     * @param token
      * @param studentModel
      * @param facultyModel
      * @param hodModel
@@ -293,7 +317,7 @@ public class UserModel implements Serializable {
      * @param doubtModel
      * @param answerModel
      */
-    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, String profilePic, int gender, String dob, String email, long contact, String address, String userType, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, List<ArticlesModel> articlesModel, List<CommentModel> commentModel, List<CommentModel> doubtModel, List<AnswerModel> answerModel) {
+    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, String profilePic, int gender, String dob, String email, long contact, String address, String userType, boolean approved, String token, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, List<ArticlesModel> articlesModel, List<CommentModel> commentModel, List<CommentModel> doubtModel, List<AnswerModel> answerModel) {
         this.userId = userId;
         this.password = password;
         this.loginStatus = loginStatus;
@@ -306,6 +330,8 @@ public class UserModel implements Serializable {
         this.contact = contact;
         this.address = address;
         this.userType = userType;
+        this.approved = approved;
+        this.token = token;
         this.studentModel = studentModel;
         this.facultyModel = facultyModel;
         this.hodModel = hodModel;

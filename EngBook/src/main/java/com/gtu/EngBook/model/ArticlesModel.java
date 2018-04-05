@@ -15,7 +15,7 @@ public class ArticlesModel implements Serializable {
     UserModel userModel;
 
 
-    @Column(name="dept_id")
+    @Column(name = "dept_id")
     private long deptId;
 
     @Id
@@ -36,7 +36,6 @@ public class ArticlesModel implements Serializable {
 
     @Column(name = "create_time")
     private long createTime;
-
 
 
     public long getDeptId() {
@@ -63,8 +62,6 @@ public class ArticlesModel implements Serializable {
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
     }
-
-
 
 
     public ArticlesModel() {
@@ -100,7 +97,7 @@ public class ArticlesModel implements Serializable {
     }
 
     /**
-     *  @param userModel
+     * @param userModel
      * @param deptId
      * @param articleId
      * @param likes
