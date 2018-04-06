@@ -46,26 +46,26 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
     String[] no_of_shares;
     int[] images;*/
 
-    Object[] no_of_comments;
+    int[] comments;
     ArrayList<Article> articleList = new ArrayList<>();
     DisplayImageOptions options;
     ImageLoader imgloader;
-    static int i,j=0;
 
 
-    public ArticlesAdapter(Context cont, ArrayList<Article> articleList, Object no_of_comments,int size) {
+    public ArticlesAdapter(Context cont, ArrayList<Article> articleList, int[] comments) {
         this.cont = cont;
         /*this.images = images;
         this.user_name = user_name;
         this.time_stamp = time_stamp;
-        this.no_of_comments = no_of_comments;
+        this.no_of_comments = no_of_commens;
         this.no_of_shares = no_of_shares;
         this.text_post = text_data;*/
         this.articleList = articleList;
-        this.no_of_comments=new Object[size];
-        this.no_of_comments[i] = no_of_comments;
-        Log.d("error","he"+this.no_of_comments[i]);
-        i++;
+      //  this.comments=new int[size];
+      //  this.comments[i] = comment;
+        this.comments=comments;
+        Log.d("error","he"+this.comments[0]);
+
         options = new DisplayImageOptions.Builder().build();
         imgloader = ImageLoader.getInstance();
     }
@@ -153,8 +153,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
  */     //  j++;
 
 
-        holder.no_of_comments.setText("" +no_of_comments[j] + " comments");
-        j++;
+        holder.no_of_comments.setText("" +comments[position] + " comments");
+
 
         holder.no_of_likes.setText("" + articleList.get(position).getLikes() + " likes");
 

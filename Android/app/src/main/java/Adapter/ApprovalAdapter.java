@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Created by Abhishek Koranne on 27-03-2018.
  */
 
-public class    ApprovalAdapter extends RecyclerView.Adapter<ApprovalAdapter.ApprovalViewHolder> {
+public class ApprovalAdapter extends RecyclerView.Adapter<ApprovalAdapter.ApprovalViewHolder> {
     Context cont;
     ArrayList<Student> studentsList = new ArrayList<>();
     DisplayImageOptions options;

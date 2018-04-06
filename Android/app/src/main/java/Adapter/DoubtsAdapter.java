@@ -34,16 +34,15 @@ import java.util.Date;
 public class DoubtsAdapter extends RecyclerView.Adapter<DoubtsAdapter.DoubtsViewHolder> {
 
     Context cont;
-
-    ArrayList<Doubt> doubtList = new ArrayList<>();
     DisplayImageOptions options;
     ImageLoader imgloader;
+    ArrayList<Doubt> doubtList = new ArrayList<>();
 
     public DoubtsAdapter(Context cont, ArrayList<Doubt> doubtList) {
         this.cont = cont;
-        this.doubtList = doubtList;
         options = new DisplayImageOptions.Builder().build();
         imgloader = ImageLoader.getInstance();
+        this.doubtList = doubtList;
     }
 
     @Override
@@ -60,42 +59,51 @@ public class DoubtsAdapter extends RecyclerView.Adapter<DoubtsAdapter.DoubtsView
         SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         String strDate = formatter.format(date);
 
-        imgloader.displayImage("https://goo.gl/images/4BDHri", holder.profile_pic, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
 
-            }
+        String userProfilePic = doubtList.get(position).getUser().getUserImageUrl();
+        /*
+        private int doubtId;
+        private String doubt = "";
+        private String doubtImageUrl = "";*/
+        if (userProfilePic != null) {
+            imgloader.displayImage(userProfilePic, holder.profile_pic, new ImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
 
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                }
 
-            }
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
 
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                }
 
-            }
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
+                }
 
-            }
-        });
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+
+                }
+            });
+        }
+        holder.profile_pic.setImageResource(R.drawable.ic_person_blue_a700_18dp);
 
         holder.user_name.setText(doubtList.get(position).getUser().getFirstName().toString() + " " + doubtList.get(position).getUser().getLastName().toString());
         holder.timestamp.setText(strDate);
 
         holder.no_of_upvotes.setText("" + doubtList.get(position).getUpVote());
-        holder.no_of_answers.setText("" + doubtList.get(position).getAnswerList().size());
+        holder.no_of_answers.setText("" + doubtList.get(position).getNumberOfAnswers());
         holder.no_of_downvotes.setText("" + doubtList.get(position).getDownVote());
-        holder.doubt_question.setText(doubtList.get(position).getDoubt());
+        holder.doubt_question.setText(doubtList.get(position).getDoubtHeading());
 
-
+/*
         String doubtTags = "";
-        final ArrayList<String> doubtTagsList = doubtList.get(position).getDoubtTagsList();
+        final ArrayList<String> doubtTagsList = doubtList.get(position).getTag();
         for (int i = 0, n = doubtTagsList.size(); i < n; i++) {
             doubtTags = doubtTags.concat(doubtTagsList.get(i) + "   ");
-        }
+        }*/
 
         holder.profile_pic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +119,7 @@ public class DoubtsAdapter extends RecyclerView.Adapter<DoubtsAdapter.DoubtsView
             }
         });
 
-        holder.doubt_question_tag.setText(doubtTags);
+        holder.doubt_question_tag.setText(doubtList.get(position).getTag());
         holder.layout_doubt_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
