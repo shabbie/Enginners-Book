@@ -5,7 +5,11 @@ package com.example.abhishekkoranne.engineersbook;
  */
 
 public class Constant {
+
+    //public static String articleID="";
+
     public static final String BASE_URL = "http://192.168.43.55:8080";
+    //public static final String BASE_URL = "http://192.168.43.74:8080";
     // TODO: Note: Don't create urls as BASE_URL + "some_url"
     public static final String URL_LOGIN = "/user/login";
     public static final String URL_REGISTER = "user/register";
@@ -14,7 +18,9 @@ public class Constant {
     // Add all your urls here...
     public static final String URL_GET_ARTICLES = "user/getarticle/1/7/";
     public static final String URL_GET_DOUBT = "user/getdoubtlist/1/7/";
-    public static final String URL_GET_COMMENTS = "/user/getcomment/1/";
+    public static final String URL_STUD_REG = "user/register/student/";
 
+   //public static final String URL_GET_COMMENTS = "user/getcomment/"+articleID+"/";
+   // public static final String URL_GET_ANSWERS = "user/getanswer/";
 
 }
