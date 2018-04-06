@@ -51,6 +51,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DoubtsFragment extends Fragment {
     RecyclerView rv_doubts;
     FloatingActionButton fab_ask_doubt;
+    ArrayList<User> usersList = new ArrayList<>();
 //    SearchView sv_doubts;
 
     ArrayList<Doubt> doubtList = new ArrayList<>();
@@ -82,7 +83,7 @@ public class DoubtsFragment extends Fragment {
 
         APIManager api = retrofit.create(APIManager.class);
         rv_doubts = (RecyclerView) getActivity().findViewById(R.id.rv_doubts);
-        fab_ask_doubt= (FloatingActionButton) getActivity().findViewById(R.id.fab_ask_doubt);
+        fab_ask_doubt = (FloatingActionButton) getActivity().findViewById(R.id.fab_ask_doubt);
         fab_ask_doubt.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorFabBackground)));
         fab_ask_doubt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +92,7 @@ public class DoubtsFragment extends Fragment {
             }
         });
 
-        Call<Map<String, Object>> call = api.getdoubtlist(0,10);
+        Call<Map<String, Object>> call = api.getdoubtlist(0, 10);
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please Wait...");
         progressDialog.show();
@@ -126,25 +127,69 @@ public class DoubtsFragment extends Fragment {
                         JsonObject content = gson.fromJson(jsonString, JsonObject.class);
                         Log.d("error", "content: " + content);
 
-                        JsonArray arr=content.getAsJsonArray("Doubtlist");
-                        JsonElement[] elements=new JsonElement[arr.size()];
+                        JsonArray doubtListArr = content.getAsJsonArray("Doubtlist");
+                        JsonArray userInfoArr = content.getAsJsonArray("correspondingUserInfo");
 
-                        String doubtId, deptId, upvote, downvote, createTime, text, tag;
+                        JsonArray numOfAnswersArr = content.getAsJsonArray("noOfCorrespondingAnswers");
+                        JsonElement[] elements = new JsonElement[doubtListArr.size()];
 
-                        for (int i=0;i<arr.size();i++)
-                        {
-                            elements[i]=arr.get(i);
-                            doubtId=""+elements[i].getAsJsonObject().get("doubtId");
-                            deptId=""+elements[i].getAsJsonObject().get("deptId");
-                            upvote=""+elements[i].getAsJsonObject().get("upvote");
-                            downvote=""+elements[i].getAsJsonObject().get("downvote");
-                            createTime=""+elements[i].getAsJsonObject().get("createTime");
-                            text=""+elements[i].getAsJsonObject().get("text");
-                            tag=""+elements[i].getAsJsonObject().get("tag");
 
-                            Log.d("errorID", "OBJ: " + elements[i].getAsJsonObject().get("deptId"));
-                            displayDoubts(doubtId,deptId,upvote,downvote,createTime,text,tag);
+                        int doubtId[] = new int[doubtListArr.size()];
+                        String[] doubt = new String[doubtListArr.size()];
+                        String[] doubtHeading = new String[doubtListArr.size()];
+                        String[] doubtImageUrl = new String[doubtListArr.size()];
+                        int upVotes[] = new int[doubtListArr.size()];
+                        int downVotes[] = new int[doubtListArr.size()];
+                        long timestamp[] = new long[doubtListArr.size()];
+                        String[] tags = new String[doubtListArr.size()];
+
+
+                        int numberOfAnswers[] = new int[numOfAnswersArr.size()];
+
+
+                        String[] user_info = new String[userInfoArr.size()];
+                        String[] userId = new String[userInfoArr.size()];
+                        String[] firstName = new String[userInfoArr.size()];
+                        String[] lastName = new String[userInfoArr.size()];
+                        String[] profilePic = new String[userInfoArr.size()];
+                        String[] userData = new String[3];
+
+
+                        for (int i = 0, n = doubtListArr.size(); i < n; i++) {
+                            user_info[i] = userInfoArr.get(i).getAsString();
+                            userData = user_info[i].split(",");
+                            userId[i] = userData[0];
+                            firstName[i] = userData[1];
+                            lastName[i] = userData[2];
+                            profilePic[i] = userData[3];
+
+
+                            elements[i] = doubtListArr.get(i);
+                            doubtId[i] = elements[i].getAsJsonObject().get("doubtId").getAsInt();
+                            Log.d("errorDF", "DID:" + doubtId[i]);
+                            upVotes[i] = elements[i].getAsJsonObject().get("upvote").getAsInt();
+                            Log.d("errorDF", "DUV:" + upVotes[i]);
+                            downVotes[i] = elements[i].getAsJsonObject().get("downvote").getAsInt();
+                            Log.d("errorDF", "DDV:" + downVotes[i]);
+                            timestamp[i] = elements[i].getAsJsonObject().get("createTime").getAsLong();
+
+                            numberOfAnswers[i] = numOfAnswersArr.get(i).getAsInt();
+
+                            Log.d("errorDF", "NOA:" + numberOfAnswers[i]);
+                            tags[i] = elements[i].getAsJsonObject().get("tag").getAsString();
+                            doubt[i] = elements[i].getAsJsonObject().get("text").getAsString();
+                            doubtHeading[i] = elements[i].getAsJsonObject().get("heading").getAsString();
+
+                            if (elements[i].getAsJsonObject().get("doubtImage") != null) {
+                                doubtImageUrl[i] = elements[i].getAsJsonObject().get("doubtImage").getAsString();
+                            }
+
+                            doubtImageUrl[i] = null;
+                            usersList.add(new User(Integer.parseInt(userId[i]), profilePic[i], null, firstName[i], lastName[i], doubtImageUrl[i]));
+                            doubtList.add(new Doubt(timestamp[i], doubtId[i], doubt[i], doubtHeading[i], doubtImageUrl[i], upVotes[i], downVotes[i], usersList.get(i), numberOfAnswers[i], tags[i]));
                         }
+
+                        setAdapter();
                        /* Gson gson = new Gson();
                         String List = gson.toJson(content);
                         ArrayList<Article> articleList = gson.fromJson(List,
@@ -208,31 +253,12 @@ public class DoubtsFragment extends Fragment {
 */
 
 
-
     }
 
-    private void displayDoubts(String doubtId, String deptId, String upvote, String downvote, String createTime, String text, String tag)
-    {
-
-        User user1 = new User(1, "xx@xx.com", "abc@gmail.com", "Abhi", "Koranne", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-        User user2 = new User(2, "abc@gmail.com", "abc@gmail.com", "JIGGY", "VYAS", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-        User user3 = new User(3, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8", "abc@gmail.com", "Shabbi", "SRK", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-        User user4 = new User(4, "ac@gmail.com", "abc@gmail.com", "GABRU", "JAVA", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-        User user5 = new User(5, "bc@gmail.com", "abc@gmail.com", "NABDU", "Dot NET", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-
-        ArrayList<String> doubtTagsList=new ArrayList<>();
-        doubtTagsList.add("PHP");
-        doubtTagsList.add("Coding");
-        doubtTagsList.add("Web Techology");
-
-        ArrayList<Answer> answerList=new ArrayList<>();
-        answerList.add(new Answer(Long.parseLong("1522434600010"),1,00,"This is comment 1",13,1,"This is answer 1",user1));
-        answerList.add(new Answer(Long.parseLong("1522434600020"),2,01,"This is comment 2",23,2,"This is answer 2",user2));
-
-        doubtList.add(new Doubt(Long.parseLong("1522434600000"),1,text,"doubt-imag-url/abc.com",12,2, user1, answerList, doubtTagsList));
-
+    private void setAdapter() {
         DoubtsAdapter adapt = new DoubtsAdapter(getActivity(), doubtList);
         rv_doubts.setAdapter(adapt);
         rv_doubts.setLayoutManager(new LinearLayoutManager(this.getActivity()));
     }
+
 }
