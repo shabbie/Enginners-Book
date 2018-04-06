@@ -10,8 +10,7 @@ import android.os.Parcelable;
 public class Answer implements Parcelable {
     private long time;
     private int doubtId;
-    private int commentId;
-    private String comment = "";
+    private int answerId;
     private int upVote = 0;
     private int downVote = 0;
     private String answer = "";
@@ -33,20 +32,12 @@ public class Answer implements Parcelable {
         this.doubtId = doubtId;
     }
 
-    public int getCommentId() {
-        return commentId;
+    public int getAnswerId() {
+        return answerId;
     }
 
-    public void setCommentId(int commentId) {
-        this.commentId = commentId;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setAnswerId(int answerId) {
+        this.answerId = answerId;
     }
 
     public int getUpVote() {
@@ -81,11 +72,14 @@ public class Answer implements Parcelable {
         this.user = user;
     }
 
-    public Answer(long time, int doubtId, int commentId, String comment, int upVote, int downVote, String answer, User user) {
+    public static Creator<Answer> getCREATOR() {
+        return CREATOR;
+    }
+
+    public Answer(long time, int doubtId, int answerId, int upVote, int downVote, String answer, User user) {
         this.time = time;
         this.doubtId = doubtId;
-        this.commentId = commentId;
-        this.comment = comment;
+        this.answerId = answerId;
         this.upVote = upVote;
         this.downVote = downVote;
         this.answer = answer;
@@ -95,29 +89,11 @@ public class Answer implements Parcelable {
     protected Answer(Parcel in) {
         time = in.readLong();
         doubtId = in.readInt();
-        commentId = in.readInt();
-        comment = in.readString();
+        answerId = in.readInt();
         upVote = in.readInt();
         downVote = in.readInt();
         answer = in.readString();
         user = in.readParcelable(User.class.getClassLoader());
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(time);
-        dest.writeInt(doubtId);
-        dest.writeInt(commentId);
-        dest.writeString(comment);
-        dest.writeInt(upVote);
-        dest.writeInt(downVote);
-        dest.writeString(answer);
-        dest.writeParcelable(user, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Answer> CREATOR = new Creator<Answer>() {
@@ -131,4 +107,20 @@ public class Answer implements Parcelable {
             return new Answer[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(time);
+        dest.writeInt(doubtId);
+        dest.writeInt(answerId);
+        dest.writeInt(upVote);
+        dest.writeInt(downVote);
+        dest.writeString(answer);
+        dest.writeParcelable(user, flags);
+    }
 }

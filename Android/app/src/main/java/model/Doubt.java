@@ -15,55 +15,13 @@ public class Doubt implements Parcelable {
     private long time;
     private int doubtId;
     private String doubt = "";
+    private String doubtHeading="";
     private String doubtImageUrl = "";
     private int upVote = 0;
     private int downVote = 0;
     private User user;
-    ArrayList<Answer> answerList = new ArrayList<>();
-    ArrayList<String> doubtTagsList = new ArrayList<>();
-
-
-    protected Doubt(Parcel in) {
-        time = in.readLong();
-        doubtId = in.readInt();
-        doubt = in.readString();
-        doubtImageUrl = in.readString();
-        upVote = in.readInt();
-        downVote = in.readInt();
-        user = in.readParcelable(User.class.getClassLoader());
-        answerList = in.createTypedArrayList(Answer.CREATOR);
-        doubtTagsList = in.createStringArrayList();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(time);
-        dest.writeInt(doubtId);
-        dest.writeString(doubt);
-        dest.writeString(doubtImageUrl);
-        dest.writeInt(upVote);
-        dest.writeInt(downVote);
-        dest.writeParcelable(user, flags);
-        dest.writeTypedList(answerList);
-        dest.writeStringList(doubtTagsList);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Doubt> CREATOR = new Creator<Doubt>() {
-        @Override
-        public Doubt createFromParcel(Parcel in) {
-            return new Doubt(in);
-        }
-
-        @Override
-        public Doubt[] newArray(int size) {
-            return new Doubt[size];
-        }
-    };
+    private int numberOfAnswers = 0;
+    private String tag="";
 
     public long getTime() {
         return time;
@@ -87,6 +45,14 @@ public class Doubt implements Parcelable {
 
     public void setDoubt(String doubt) {
         this.doubt = doubt;
+    }
+
+    public String getDoubtHeading() {
+        return doubtHeading;
+    }
+
+    public void setDoubtHeading(String doubtHeading) {
+        this.doubtHeading = doubtHeading;
     }
 
     public String getDoubtImageUrl() {
@@ -121,31 +87,80 @@ public class Doubt implements Parcelable {
         this.user = user;
     }
 
-    public ArrayList<Answer> getAnswerList() {
-        return answerList;
+    public int getNumberOfAnswers() {
+        return numberOfAnswers;
     }
 
-    public void setAnswerList(ArrayList<Answer> answerList) {
-        this.answerList = answerList;
+    public void setNumberOfAnswers(int numberOfAnswers) {
+        this.numberOfAnswers = numberOfAnswers;
     }
 
-    public ArrayList<String> getDoubtTagsList() {
-        return doubtTagsList;
+    public String getTag() {
+        return tag;
     }
 
-    public void setDoubtTagsList(ArrayList<String> doubtTagsList) {
-        this.doubtTagsList = doubtTagsList;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
-    public Doubt(long time, int doubtId, String doubt, String doubtImageUrl, int upVote, int downVote, User user, ArrayList<Answer> answerList, ArrayList<String> doubtTagsList) {
+    public static Creator<Doubt> getCREATOR() {
+        return CREATOR;
+    }
+
+    public Doubt(long time, int doubtId, String doubt, String doubtHeading, String doubtImageUrl, int upVote, int downVote, User user, int numberOfAnswers, String tag) {
         this.time = time;
         this.doubtId = doubtId;
         this.doubt = doubt;
+        this.doubtHeading = doubtHeading;
         this.doubtImageUrl = doubtImageUrl;
         this.upVote = upVote;
         this.downVote = downVote;
         this.user = user;
-        this.answerList = answerList;
-        this.doubtTagsList = doubtTagsList;
+        this.numberOfAnswers = numberOfAnswers;
+        this.tag = tag;
     }
+
+    protected Doubt(Parcel in) {
+        time = in.readLong();
+        doubtId = in.readInt();
+        doubt = in.readString();
+        doubtHeading = in.readString();
+        doubtImageUrl = in.readString();
+        upVote = in.readInt();
+        downVote = in.readInt();
+        user = in.readParcelable(User.class.getClassLoader());
+        numberOfAnswers = in.readInt();
+        tag = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(time);
+        dest.writeInt(doubtId);
+        dest.writeString(doubt);
+        dest.writeString(doubtHeading);
+        dest.writeString(doubtImageUrl);
+        dest.writeInt(upVote);
+        dest.writeInt(downVote);
+        dest.writeParcelable(user, flags);
+        dest.writeInt(numberOfAnswers);
+        dest.writeString(tag);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Doubt> CREATOR = new Creator<Doubt>() {
+        @Override
+        public Doubt createFromParcel(Parcel in) {
+            return new Doubt(in);
+        }
+
+        @Override
+        public Doubt[] newArray(int size) {
+            return new Doubt[size];
+        }
+    };
 }
