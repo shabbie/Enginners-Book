@@ -55,7 +55,6 @@ public class ArticleActivity extends AppCompatActivity {
     ArticleCommentsAdapter adapt;
     DisplayImageOptions options;
     ImageLoader imgloader;
-    int p = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +76,17 @@ public class ArticleActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+        Intent ii = getIntent();
+        Article article_object = ii.getParcelableExtra("article_object");
+        long timeStamp = article_object.getTime();
+        String userName = article_object.getUser().getFirstName() + " " + article_object.getUser().getLastName();
+        String textPost = article_object.getArticle_text_post();
+        int noOfLikes = article_object.getLikes();
+
+        int articleID=article_object.getArticleid();
+        // Constant.articleID=""+articleID;
 
 
         imgloader.displayImage("http://dl.glitter-graphics.com/pub/844/844251efzrltedz0.gif", profile_pic, new ImageLoadingListener() {
@@ -129,7 +139,7 @@ public class ArticleActivity extends AppCompatActivity {
 
         APIManager api = retrofit.create(APIManager.class);
         // TODO: Note: Replace 'getDetails(param)' API method for every new API here
-        Call<Map<String, Object>> call = api.getComment(0, 10);
+        Call<Map<String, Object>> call = api.getComment(articleID,0, 10);
         final ProgressDialog progressDialog = new ProgressDialog(ArticleActivity.this);
         progressDialog.setMessage("Please Wait...");
         progressDialog.show();
@@ -174,7 +184,7 @@ public class ArticleActivity extends AppCompatActivity {
                             elements[i] = arr.get(i);
                             commentId = "" + elements[i].getAsJsonObject().get("commentId");
                             articleId = "" + elements[i].getAsJsonObject().get("articleId");
-                            text = "" + elements[i].getAsJsonObject().get("text");
+                            text = elements[i].getAsJsonObject().get("text").getAsString();
                             createTime = "" + elements[i].getAsJsonObject().get("createTime");
 
                             // int comment=Integer.parseInt(commentId);
@@ -219,12 +229,6 @@ public class ArticleActivity extends AppCompatActivity {
         /*sv_doubts_question.fullScroll(ScrollView.FOCUS_UP);*/
         sv_article.smoothScrollTo(0, 0);
 
-        Intent ii = getIntent();
-        Article article_object = ii.getParcelableExtra("article_object");
-        long timeStamp = article_object.getTime();
-        String userName = article_object.getUser().getFirstName() + " " + article_object.getUser().getLastName();
-        String textPost = article_object.getArticle_text_post();
-        int noOfLikes = article_object.getLikes();
 
         Date date = new Date(timeStamp);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
@@ -254,7 +258,7 @@ public class ArticleActivity extends AppCompatActivity {
         rv_article_comments.setLayoutManager(new LinearLayoutManager(this));
 */
 
-        no_of_comments.setText("" + articleCommentsList.size() + " Comments");
+
 
         profile_pic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,7 +301,7 @@ public class ArticleActivity extends AppCompatActivity {
         x.add(user3);
         x.add(user4);
 
-        int n = 1;
+        int n = 1,p=0;
         //  int comment=Integer.parseInt(commentId);
         articleCommentsList.add(new Comment(1000, n, text, x.get(p)));
         n++;
@@ -305,6 +309,7 @@ public class ArticleActivity extends AppCompatActivity {
         adapt = new ArticleCommentsAdapter(this, articleCommentsList);
         rv_article_comments.setAdapter(adapt);
         rv_article_comments.setLayoutManager(new LinearLayoutManager(this));
+        no_of_comments.setText("" + articleCommentsList.size() + " Comments");
     }
 
     @Override
