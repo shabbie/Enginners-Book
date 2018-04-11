@@ -65,9 +65,9 @@ public class ArticlesFragment extends Fragment {
 
     JSONArray arr1 = new JSONArray();
     ArrayList<Article> articleList = new ArrayList<>();
-    ArrayList<Comment> commentList = new ArrayList<>();
+//    ArrayList<Comment> commentList = new ArrayList<>();
 
-    int[] comments;
+   // int[] comments;
     int[] articleID;
 
     public ArticlesFragment() {
@@ -87,7 +87,7 @@ public class ArticlesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        articleList.clear();
         rv_article = (RecyclerView) getActivity().findViewById(R.id.rv_article);
         fab_add_article = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_article);
         fab_add_article.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorFabBackground)));
@@ -151,26 +151,28 @@ public class ArticlesFragment extends Fragment {
                     Log.d("error", "content: " + content);
 
                     JsonArray arr = content.getAsJsonArray("ArticleList");
-                    JsonArray arr1 = content.getAsJsonArray("numberOfCommmentsList");
-
+                    JsonArray numberOfCommmentsArr = content.getAsJsonArray("numberOfCommmentsList");
+                    int[] comments=new int[numberOfCommmentsArr.size()];
                     articleID = new int[arr.size()];
 
 
                     //Log.d("errorJSarr1", "arr1: " + arr1.get(0).getAsInt());
 
                     JsonElement[] elements = new JsonElement[arr.size()];
-                    int[] commentElements = new int[arr1.size()];
+                    //int[] commentElements = new int[arr1.size()];
                     //  Log.d("errors", "cmmnt: " + arr1.get(0));
 
                     String articleImage, articleText, deptId, articleType, createTime;
                     int articleId, likes;
 
-                    for (int j = 0, n = arr1.size(); j < n; j++) {
+                    /*for (int j = 0, n = arr1.size(); j < n; j++) {
                         commentElements[j] = arr1.get(j).getAsInt();
                         Log.d("error", "cmmntsji: " + commentElements[j]);
-                    }
+                    }*/
 
                     for (int i = 0, m = arr.size(); i < m; i++) {
+                        comments[i]=numberOfCommmentsArr.get(i).getAsInt();
+                        Log.d("error","comments: "+comments[i]);
                         elements[i] = arr.get(i);
                         deptId = "" + elements[i].getAsJsonObject().get("deptId");
                         articleId = elements[i].getAsJsonObject().get("articleId").getAsInt();
@@ -183,10 +185,10 @@ public class ArticlesFragment extends Fragment {
                         //      Log.d("errorID", "OBJ: " + elements[i].getAsJsonObject().get("articleId"));
 
 
-                        displayArticles(deptId, articleId, likes, articleType, articleText, articleImage, createTime, m);
+                        displayArticles(deptId, comments[i], articleId, likes, articleType, articleText, articleImage, createTime, m);
                     }
 
-                    setAdapter(commentElements, arr1.size());
+                    setAdapter();
 
                     //   ArrayList<Article> myArticlesList = gson.fromJson(content.get("ArticleList").getAsJsonArray().toString(),
                     //   new TypeToken<ArrayList<Article>>(){}.getType());
@@ -307,11 +309,9 @@ public class ArticlesFragment extends Fragment {
                 "Hope you are doing well!" +
                 "Hope you are doing well!", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1811310904%2Flogo100x100_SM_twitter_400x400.jpg&imgrefurl=https%3A%2F%2Ftwitter.com%2Fsomos100x100&docid=ZK72S9aXTiELUM&tbnid=-1E2q0TplBkcCM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA..i&w=400&h=400&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA&iact=mrc&uact=8", 10, 20, 30, user5, new ArrayList<Comment>()));
 */
-
-
     }
 
-    private void displayArticles(String deptId, int articleId, int likes, String articleType, String articleText, String articleImage, String createTime, int size) {
+    private void displayArticles(String deptId, int comment, int articleId, int likes, String articleType, String articleText, String articleImage, String createTime, int size) {
         if (i >= size) {
             i--;
         }
@@ -323,22 +323,22 @@ public class ArticlesFragment extends Fragment {
         User user3 = new User(3, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8", "abc@gmail.com", "Shabbir", "Bhaisaheb", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
         User user4 = new User(4, "ac@gmail.com", "abc@gmail.com", "Himalay", "Patel", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
         User user5 = new User(5, "bc@gmail.com", "abc@gmail.com", "NABDU", "Dot NET", "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fwww.internetvibes.net%2Fwp-content%2Fgallery%2Favatars%2F017.png&imgrefurl=https%3A%2F%2Fwww.internetvibes.net%2Fgallery%2Fnice-avatar-set-613-avatars-100x100%2F&docid=TOdPgfD5Tee_eM&tbnid=7fp-HioZO06DsM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw..i&w=100&h=100&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwhFKAcwBw&iact=mrc&uact=8");
-        commentList.add(new Comment(1000, 1, "This is comment 1", user1));
+        /*commentList.add(new Comment(1000, 1, "This is comment 1", user1));
         commentList.add(new Comment(2000, 2, "This is comment 2", user2));
         commentList.add(new Comment(3000, 3, "This is comment 3", user3));
         commentList.add(new Comment(4000, 4, "This is comment 4", user4));
-        commentList.add(new Comment(5000, 5, "This is comment 5", user5));
+        commentList.add(new Comment(5000, 5, "This is comment 5", user5));*/
 
-        articleList.add(new Article(1000, articleID[i], articleText, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1811310904%2Flogo100x100_SM_twitter_400x400.jpg&imgrefurl=https%3A%2F%2Ftwitter.com%2Fsomos100x100&docid=ZK72S9aXTiELUM&tbnid=-1E2q0TplBkcCM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA..i&w=400&h=400&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA&iact=mrc&uact=8", likes, 20, user1, commentList));
+        articleList.add(new Article(1000, articleID[i], articleText, "https://www.google.co.in/imgres?imgurl=https%3A%2F%2Fpbs.twimg.com%2Fprofile_images%2F1811310904%2Flogo100x100_SM_twitter_400x400.jpg&imgrefurl=https%3A%2F%2Ftwitter.com%2Fsomos100x100&docid=ZK72S9aXTiELUM&tbnid=-1E2q0TplBkcCM%3A&vet=10ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA..i&w=400&h=400&bih=653&biw=1517&q=images%20100x100&ved=0ahUKEwjRq9i2ybPYAhWMpY8KHffNBp0QMwg-KAAwAA&iact=mrc&uact=8", likes, 20, user1, comment));
         i++;
     }
 
-    private void setAdapter(int[] comments, int size) {
+    private void setAdapter() {
         try {/*
             for (int i = 0; i < comments.length; i++) {
                 Log.d("error", "CMMNT ARR" + comments[i]);
             }*/
-            ArticlesAdapter adapt = new ArticlesAdapter(getActivity(), articleList, comments);
+            ArticlesAdapter adapt = new ArticlesAdapter(getActivity(), articleList);
             rv_article.setAdapter(adapt);
             rv_article.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         } catch (Exception e) {
