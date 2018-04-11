@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:background="#ffffff"
+    android:background="#e6e6e6"
     tools:context="com.example.abhishekkoranne.engineersbook.Activity.ChatActivity">
 
     <android.support.v7.widget.RecyclerView
