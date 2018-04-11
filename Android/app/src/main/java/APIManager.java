@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,7 +16,9 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -48,9 +51,23 @@ public interface APIManager {
     @GET("user/getanswer/{doubtID}/")
     Call<Map<String, Object>> getAnswer(@Path(value = "doubtID", encoded = true) int doubtID,@Query("page") int page, @Query("size") int size);
 
-    @FormUrlEncoded
+    @Multipart
     @POST(Constant.URL_STUD_REG)
-    Call<Map<String, Object>> registerStudent(@FieldMap Map<String, Object> params);
+    Call<Map<String, RequestBody>> registerStudent(@PartMap Map<String, RequestBody> partMap);
+
+    @FormUrlEncoded
+    @POST(Constant.URL_FACULTY_REG)
+    Call<Map<String, Object>> registerFaculty(@FieldMap Map<String, Object> params);
+
+    @FormUrlEncoded
+    @POST(Constant.URL_FORGOT_PASS)
+    Call<Map<String, Object>> forgotPass(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST(Constant.URL_FORGOT_PASS_TOKEN)
+    Call<Map<String, Object>> checkToken(@FieldMap Map<String, String> params);
+
+
 //    Call<Map<String, Object>> registerStudent(@Part("name") RequestBody name);
     // Add all your api calls here...
 }
