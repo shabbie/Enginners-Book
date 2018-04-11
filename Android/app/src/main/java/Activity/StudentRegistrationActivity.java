@@ -222,9 +222,9 @@ public class StudentRegistrationActivity extends AppCompatActivity {
                     img_preview.setVisibility(View.VISIBLE);
 
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
-                    imgbyte=byteArrayOutputStream.toByteArray();
+                    imgbyte = byteArrayOutputStream.toByteArray();
                     /*imageToString(image);*/
 
                 } catch (Exception e) {
@@ -255,14 +255,40 @@ public class StudentRegistrationActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        File file = new File(imageUri.getPath());
+        //File file = new File(imageUri.getPath());
+/*
 
-//        RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-//        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
-//        RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload_test");
+        RequestBody reqFile = RequestBody.create(MediaType.parse("image"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), reqFile);
+        RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "upload_test");
+*/
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("profile_pic", imgbyte);
+//        Map<String, Object> params = new HashMap<>();
+        Map<String, RequestBody> partMap = new HashMap<>();
+        if (imageUri.getPath() != null && !imageUri.getPath().isEmpty()) {
+            File attachment = new File(imageUri.getPath());
+            String fileName = attachment.getName();
+            partMap.put("profile_pic" + "\"; filename=\"" + fileName,
+                    RequestBody.create(MediaType.parse("file/*"), attachment));
+        }
+        partMap.put("enroll", RequestBody.create(MediaType.parse("text/plain"), et_enrollment_no.getText().toString()));
+        partMap.put("fname", RequestBody.create(MediaType.parse("text/plain"), et_first_name.getText().toString()));
+        partMap.put("lname", RequestBody.create(MediaType.parse("text/plain"), et_last_name.getText().toString()));
+        partMap.put("gender", RequestBody.create(MediaType.parse("text/plain"), gender));
+        partMap.put("dob", RequestBody.create(MediaType.parse("text/plain"), et_date_of_birth.getText().toString()));
+        partMap.put("addr", RequestBody.create(MediaType.parse("text/plain"), et_address.getText().toString()));
+        partMap.put("contact", RequestBody.create(MediaType.parse("text/plain"), et_contact_no.getText().toString()));
+        partMap.put("email", RequestBody.create(MediaType.parse("text/plain"), et_email.getText().toString()));
+        partMap.put("dept_name", RequestBody.create(MediaType.parse("text/plain"), d));
+        partMap.put("colg_name", RequestBody.create(MediaType.parse("text/plain"), c));
+        partMap.put("univ_name", RequestBody.create(MediaType.parse("text/plain"), u));
+        partMap.put("interest", RequestBody.create(MediaType.parse("text/plain"), et_interests.getText().toString()));
+        partMap.put("yop", RequestBody.create(MediaType.parse("text/plain"), et_year_of_passing.getText().toString()));
+        partMap.put("pass", RequestBody.create(MediaType.parse("text/plain"),  et_password.getText().toString()));
+
+
+//        params.put("profile_pic", "");
+/*
         params.put("enroll", et_enrollment_no.getText().toString());
         params.put("fname", et_first_name.getText().toString());
         params.put("lname", et_last_name.getText().toString());
@@ -277,13 +303,14 @@ public class StudentRegistrationActivity extends AppCompatActivity {
         params.put("interest", et_interests.getText().toString());
         params.put("yop", et_year_of_passing.getText().toString());
         params.put("pass", et_password.getText().toString());
+*/
 
 
         /*Object ob=new Object();*/
         // Initializing APIManager
         APIManager api = retrofit.create(APIManager.class);
 
-        Call<Map<String, Object>> call = api.registerStudent(params);
+        Call<Map<String, RequestBody>> call = api.registerStudent(partMap);
        /* Call<Map<String, Object>> call = api.registerStudent("", enroll, fname, lname,
                 gender, dob, address, contact, email, d, c, u, interests, yop, password);
 */
@@ -291,9 +318,9 @@ public class StudentRegistrationActivity extends AppCompatActivity {
         progressDialog.setMessage("Please Wait...");
         progressDialog.show();
 
-        call.enqueue(new Callback<Map<String, Object>>() {
+        call.enqueue(new Callback<Map<String, RequestBody>>() {
             @Override
-            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+            public void onResponse(Call<Map<String, RequestBody>> call, Response<Map<String, RequestBody>> response) {
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
@@ -306,8 +333,8 @@ public class StudentRegistrationActivity extends AppCompatActivity {
                         Log.d("Error", "onResponse: body: " + response.body());
 
                         // Read response as follow
-                        Map<String, Object> content = response.body();
-                        startActivity(new Intent(StudentRegistrationActivity.this, HomeActivity.class));
+                        Map<String, RequestBody> content = response.body();
+                        startActivity(new Intent(StudentRegistrationActivity.this, LoginActivity.class));
 
                         //content.get("email").getAsString();
                         //content.get("password").getAsString();
@@ -328,7 +355,7 @@ public class StudentRegistrationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+            public void onFailure(Call<Map<String, RequestBody>> call, Throwable t) {
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }

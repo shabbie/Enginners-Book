@@ -2,7 +2,9 @@ package com.example.abhishekkoranne.engineersbook.Activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,8 +58,7 @@ public class LoginActivity extends Activity {
 
     private void loginApi() {
 
-        if(et1.getText().toString().equals("root"))
-        {
+        if (et1.getText().toString().equals("root")) {
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
         }
         Retrofit retrofit = new Retrofit.Builder()
@@ -89,19 +90,37 @@ public class LoginActivity extends Activity {
                 try {
                     // Read response as follow
                     if (response != null && response.body() != null) {
-                        Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
 
                         Log.d("Error", "onResponse: body: " + response.body());
-
+                        Gson gson = new Gson();
                         // Read response as follow
-                        Map<String, Object> content = response.body();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        Map<String, Object> map = response.body();
+                        String jsonString = gson.toJson(map);
+                        Log.d("error", "jsonString: " + jsonString);
+
+                        JsonObject content = gson.fromJson(jsonString, JsonObject.class);
+
+                        Log.d("error", "content: " + content);
+                        JsonElement res = content.get("response");
+                        JsonElement mes = content.get("message");
+                        Boolean resp = res.getAsJsonObject().get("response").getAsBoolean();
+                        String mssg = "" + res.getAsJsonObject().get("message");
+                        Log.d("error", "resp:" + resp);
+                        Log.d("error", "mes:" + mes);
+                        if (resp==false) {
+                            Toast.makeText(LoginActivity.this, "" + mssg, Toast.LENGTH_SHORT).show();
+                        } else {
+                            SharedPreferences shad = getSharedPreferences("cookie", Context.MODE_PRIVATE);
+
+
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        }
 
                         //content.get("email").getAsString();
                         //content.get("password").getAsString();
 
                         // Convert JSONArray to your custom model class list as follow
-                        Gson gson = new Gson();
+
                         //new TypeToken<List<YourModelClass>>(){}.getType());
                     } else {
                         Toast.makeText(LoginActivity.this, "No response available.", Toast.LENGTH_SHORT).show();

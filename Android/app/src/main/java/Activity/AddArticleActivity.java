@@ -15,11 +15,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.abhishekkoranne.engineersbook.Constant;
 import com.example.abhishekkoranne.engineersbook.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddArticleActivity extends AppCompatActivity {
 
@@ -32,6 +36,11 @@ public class AddArticleActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL) // Bas URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         text_post= (EditText) findViewById(R.id.text_post);
 

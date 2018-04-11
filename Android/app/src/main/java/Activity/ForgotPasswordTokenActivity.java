@@ -4,13 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,53 +26,31 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordTokenActivity extends AppCompatActivity {
 
-    EditText etemail;
-
+    EditText et_token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        etemail=(EditText)findViewById(R.id.etemail);
-        //actionBar.setHomeAsUpIndicator(R.drawable.ic_action_name);
+        setContentView(R.layout.activity_forgot_password_token);
+        et_token=(EditText)findViewById(R.id.et_token);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                //finish();
-
-                onBackPressed();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    public void onSearchAccount(View view) {
+    public void onSubmitToken()
+    {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL) // Bas URL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         Map<String, String> params = new HashMap<>();
-        params.put("email", etemail.getText().toString());
+        params.put("token", et_token.getText().toString());
 
         APIManager api = retrofit.create(APIManager.class);
 
-        Call<Map<String, Object>> call = api.forgotPass(params);
+        Call<Map<String, Object>> call = api.login(params);
 
-        final ProgressDialog progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
+        final ProgressDialog progressDialog = new ProgressDialog(ForgotPasswordTokenActivity.this);
         progressDialog.setMessage("Please Wait...");
         progressDialog.show();
 
@@ -101,9 +75,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         JsonObject content = gson.fromJson(jsonString, JsonObject.class);
 
                         Log.d("error", "content: " + content);
-                        startActivity(new Intent(ForgotPasswordActivity.this, ForgotPasswordTokenActivity.class));
-
-                        /*JsonElement res = content.get("response");
+/*
+                        JsonElement res = content.get("response");
                         JsonElement mes = content.get("message");
                         Boolean resp = res.getAsJsonObject().get("response").getAsBoolean();
                         String mssg = "" + res.getAsJsonObject().get("message");
@@ -118,6 +91,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         }
 */
+
                         //content.get("email").getAsString();
                         //content.get("password").getAsString();
 
@@ -125,12 +99,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                         //new TypeToken<List<YourModelClass>>(){}.getType());
                     } else {
-                        Toast.makeText(ForgotPasswordActivity.this, "No response available.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgotPasswordTokenActivity.this, "No response available.", Toast.LENGTH_SHORT).show();
 
                         Log.d("Error", "No response available");
                     }
                 } catch (Exception e) {
-                    Toast.makeText(ForgotPasswordActivity.this, "Error occurred.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ForgotPasswordTokenActivity.this, "Error occurred.", Toast.LENGTH_SHORT).show();
 
                     Log.d("Error", "Error in reading response: " + e.getMessage());
                 }
@@ -142,10 +116,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
 
-                Toast.makeText(ForgotPasswordActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPasswordTokenActivity.this, "Failed", Toast.LENGTH_SHORT).show();
 
                 Log.d("Error", "onFailure: " + t.getMessage());
             }
         });
+
     }
 }
