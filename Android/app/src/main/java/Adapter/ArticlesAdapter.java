@@ -46,13 +46,13 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
     String[] no_of_shares;
     int[] images;*/
 
-    int[] comments;
+//    int[] comments;
     ArrayList<Article> articleList = new ArrayList<>();
     DisplayImageOptions options;
     ImageLoader imgloader;
 
 
-    public ArticlesAdapter(Context cont, ArrayList<Article> articleList, int[] comments) {
+    public ArticlesAdapter(Context cont, ArrayList<Article> articleList) {
         this.cont = cont;
         /*this.images = images;
         this.user_name = user_name;
@@ -63,9 +63,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
         this.articleList = articleList;
       //  this.comments=new int[size];
       //  this.comments[i] = comment;
-        this.comments=comments;
-        Log.d("error","he"+this.comments[0]);
-
+  /*      this.comments=comments;
+        Log.d("error","he"+this.comments[1]);
+*/
         options = new DisplayImageOptions.Builder().build();
         imgloader = ImageLoader.getInstance();
     }
@@ -153,7 +153,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
  */     //  j++;
 
 
-        holder.no_of_comments.setText("" +comments[position] + " comments");
+        holder.no_of_comments.setText(" " + articleList.get(position).getNoOfComments() + " comments");
 
 
         holder.no_of_likes.setText("" + articleList.get(position).getLikes() + " likes");
@@ -171,6 +171,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.Articl
 
             }
         });
+
+
 
         holder.layout_article_item.setOnClickListener(new View.OnClickListener() {
             @Override
