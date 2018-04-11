@@ -18,9 +18,22 @@ public class Article implements Parcelable {
     private int likes;
     private int shares;
     private User user;
-    ArrayList<Comment> commentList= new ArrayList<>();
+    //ArrayList<Comment> commentList= new ArrayList<>();
+    private int noOfComments = 0;
 
-    public Article(long time, int articleid, String article_text_post, String articleImageUrl, int likes, int shares, User user, ArrayList<Comment> commentList) {
+
+    protected Article(Parcel in) {
+        time = in.readLong();
+        articleid = in.readInt();
+        article_text_post = in.readString();
+        articleImageUrl = in.readString();
+        likes = in.readInt();
+        shares = in.readInt();
+        user = in.readParcelable(User.class.getClassLoader());
+        noOfComments = in.readInt();
+    }
+
+    public Article(long time, int articleid, String article_text_post, String articleImageUrl, int likes, int shares, User user, int noOfComments) {
         this.time = time;
         this.articleid = articleid;
         this.article_text_post = article_text_post;
@@ -28,9 +41,37 @@ public class Article implements Parcelable {
         this.likes = likes;
         this.shares = shares;
         this.user = user;
-        this.commentList = commentList;
+        this.noOfComments = noOfComments;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(time);
+        dest.writeInt(articleid);
+        dest.writeString(article_text_post);
+        dest.writeString(articleImageUrl);
+        dest.writeInt(likes);
+        dest.writeInt(shares);
+        dest.writeParcelable(user, flags);
+        dest.writeInt(noOfComments);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        @Override
+        public Article createFromParcel(Parcel in) {
+            return new Article(in);
+        }
+
+        @Override
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
 
     public long getTime() {
         return time;
@@ -88,51 +129,15 @@ public class Article implements Parcelable {
         this.user = user;
     }
 
-    public ArrayList<Comment> getCommentList() {
-        return commentList;
+    public int getNoOfComments() {
+        return noOfComments;
     }
 
-    public void setCommentList(ArrayList<Comment> commentList) {
-        this.commentList = commentList;
+    public void setNoOfComments(int noOfComments) {
+        this.noOfComments = noOfComments;
     }
 
-    protected Article(Parcel in) {
-        time = in.readLong();
-        articleid = in.readInt();
-        article_text_post = in.readString();
-        articleImageUrl = in.readString();
-        likes = in.readInt();
-        shares = in.readInt();
-        user = in.readParcelable(User.class.getClassLoader());
-        commentList = in.createTypedArrayList(Comment.CREATOR);
+    public static Creator<Article> getCREATOR() {
+        return CREATOR;
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(time);
-        dest.writeInt(articleid);
-        dest.writeString(article_text_post);
-        dest.writeString(articleImageUrl);
-        dest.writeInt(likes);
-        dest.writeInt(shares);
-        dest.writeParcelable(user, flags);
-        dest.writeTypedList(commentList);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Article> CREATOR = new Creator<Article>() {
-        @Override
-        public Article createFromParcel(Parcel in) {
-            return new Article(in);
-        }
-
-        @Override
-        public Article[] newArray(int size) {
-            return new Article[size];
-        }
-    };
 }
