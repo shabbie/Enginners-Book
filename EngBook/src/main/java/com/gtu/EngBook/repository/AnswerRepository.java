@@ -14,10 +14,6 @@ public interface AnswerRepository extends JpaRepository<AnswerModel, Long > {
 
     public AnswerModel findByAnswerId(Long answer_id);
 
-    @Query(value = "SELECT count(answer_id) FROM answers WHERE doubt_id = :doubt_id", nativeQuery = true)
-    public int findByDoubtId(@Param("doubt_id") long doubt_id);
-
-
     public List<AnswerModel> findAllByUserModel(UserModel userModel);
 }
 

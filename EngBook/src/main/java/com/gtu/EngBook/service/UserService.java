@@ -1,7 +1,14 @@
 package com.gtu.EngBook.service;
 
 import com.gtu.EngBook.model.*;
+import com.gtu.EngBook.model.TempModels.ArticlesCommentsModel;
+import com.gtu.EngBook.model.TempModels.DoubtsAnswersModel;
+import com.gtu.EngBook.model.TempModels.StudentListBaseModel;
+import com.gtu.EngBook.model.TempModels.UserInfoModel;
 import com.gtu.EngBook.repository.*;
+import com.gtu.EngBook.repository.TempRepositories.ArticlesCommentsRepository;
+import com.gtu.EngBook.repository.TempRepositories.DoubtsAnswersRepository;
+import com.gtu.EngBook.repository.TempRepositories.UserInfoRepository;
 import com.sendgrid.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +46,15 @@ public class UserService {
     private CollegeRepository collegeRepository;
     @Autowired
     private UniversityRepository universityRepository;
+    @Autowired
+    private StudentListBaseRepository studentListBaseRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+    @Autowired
+    private ArticlesCommentsRepository articlesCommentsRepository;
+    @Autowired
+    private DoubtsAnswersRepository doubtsAnswersRepository;
+
 
     public UserModel knowUserModel(Long userId){
         return userRepository.findByUserId(userId);
@@ -122,8 +138,9 @@ public class UserService {
 
         userModel.setStudentModel(studentModel);
         studentModel.setUserModel(userModel);
-
         userRepository.save(userModel);
+        studentRepository.save(studentModel);
+
         res.put("response","true");
         res.put("message","Registration Successfull");
         res.put("user_id",userModel.getUserId());
@@ -348,7 +365,7 @@ public class UserService {
                     " The OTP is "+token);
             Mail mail = new Mail(from, subject, to, content);
 
-            SendGrid sg = new SendGrid("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");
+            SendGrid sg = new SendGrid("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");
             Request request = new Request();
             try {
                 request.setMethod(Method.POST);
@@ -474,6 +491,87 @@ public class UserService {
 
 //ENDING UPDATE
 
+    public Object setImageCompany(HttpServletRequest request, MultipartHttpServletRequest mRequest, String type, CompanyModel companyModel) throws IOException {
+        Map<String, Object> mresponse = new HashMap<>();
+        mRequest.getParameterMap();
+        String username=request.getParameter("fname");
+        Iterator itr = mRequest.getFileNames();
+        while (itr.hasNext()) {
+            MultipartFile mFile = mRequest.getFile((String) itr.next());
+            String fileName = mFile.getOriginalFilename();
+            System.out.println(fileName);
+            //String.valueOf(request.getServletContext().getRealPath("/"))+
+            //String.valueOf(request.getServletContext().getRealPath("/"))+
+            try {
+                if (!new File( "G:\\Eng Book Android\\EngBook\\src\\main\\resources\\images\\"
+                        +type+"\\"
+                        +username .replaceAll(" ", "")).exists()) {
+                    mresponse.put("is_created",
+                            new File( "G:\\Eng Book Android\\EngBook\\src\\main\\resources\\images\\"
+                                    +type+"\\"
+                                    + username.replaceAll(" ", "")).mkdir());
+                }
+//String.valueOf(request.getServletContext().getRealPath("/"))+
+                String filepath =  "G:\\Eng Book Android\\EngBook\\src\\main\\resources\\images\\"
+                        +type+"\\"
+                        + username.replaceAll(" ", "") + "//" + fileName;
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filepath)));
+                FileCopyUtils.copy((InputStream) mFile.getInputStream(), (OutputStream) stream);
+                stream.close();
+                companyModel.setProfilePic(filepath);
+
+            } catch (Exception e) {
+                throw e;
+            }
+        }
+        return mresponse;
+    }
+
+    public Map<String, Object> setImageRegister(HttpServletRequest request, MultipartHttpServletRequest mRequest, String type, UserModel userModel)
+        throws SQLException, IOException {
+        Map<String, Object> mresponse = new HashMap<>();
+        mRequest.getParameterMap();
+        String username=request.getParameter("fname")+request.getParameter("email");
+        Iterator itr = mRequest.getFileNames();
+        while (itr.hasNext()) {
+            MultipartFile mFile = mRequest.getFile((String) itr.next());
+            String fileName = mFile.getOriginalFilename();
+            System.out.println(fileName);
+            //String.valueOf(request.getServletContext().getRealPath("/"))+
+            //String.valueOf(request.getServletContext().getRealPath("/"))+
+            try {
+                if (!new File( "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
+                        +type+"\\"
+                        +username .replaceAll(" ", "")).exists()) {
+                    mresponse.put("is_created",
+                            new File( "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
+                                    +type+"\\"
+                                    + username.replaceAll(" ", "")).mkdir());
+                }
+//String.valueOf(request.getServletContext().getRealPath("/"))+
+                String filepath =  "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
+                        +type+"\\"
+                        + username.replaceAll(" ", "") + "//" + fileName;
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filepath)));
+                FileCopyUtils.copy((InputStream) mFile.getInputStream(), (OutputStream) stream);
+                stream.close();
+                String profilePath="EngBook\\src\\main\\resources\\images\\"
+                        +type+"\\"
+                        + username.replaceAll(" ", "") + "//" + fileName;
+                userModel.setProfilePic(profilePath);
+
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
+                System.out.println(e.getMessage());
+                throw e;
+
+            }
+        }
+        return mresponse;
+}
+
+
+
     public Map<String, Object> setImage(HttpServletRequest request, MultipartHttpServletRequest mRequest, String type)
             throws SQLException, IOException {
         Map<String, Object> mresponse = new HashMap<>();
@@ -488,16 +586,16 @@ public class UserService {
             //String.valueOf(request.getServletContext().getRealPath("/"))+
             //String.valueOf(request.getServletContext().getRealPath("/"))+
             try {
-                if (!new File( "C:\\Users\\Shabbir Hussain\\Desktop\\project\\a\\EngBook\\src\\main\\resources\\images\\"
+                if (!new File( "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
                         +type+"\\"
                         +username .replaceAll(" ", "")).exists()) {
                     mresponse.put("is_created",
-                            new File( "C:\\Users\\Shabbir Hussain\\Desktop\\project\\a\\EngBook\\src\\main\\resources\\images\\"
+                            new File( "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
                                     +type+"\\"
                                     + username.replaceAll(" ", "")).mkdir());
                 }
 //String.valueOf(request.getServletContext().getRealPath("/"))+
-                String filepath =  "C:\\Users\\Shabbir Hussain\\Desktop\\project\\a\\EngBook\\src\\main\\resources\\images\\"
+                String filepath =  "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
                         +type+"\\"
                         + username.replaceAll(" ", "") + "//" + fileName;
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filepath)));
@@ -520,19 +618,40 @@ public class UserService {
         UserModel userModel1=knowUserModel(userId);
         articlesModelList=articleRepository.findAllByUserModelNotAndDeptId(userModel1,deptId,pageable);
         res.put("response","true");
-        List<String> userInfo=new ArrayList<>();
-        List<Integer> comments=new ArrayList<>();
+        List<UserInfoModel> userInfo=new ArrayList<>();
+        List<ArticlesCommentsModel> comments=new ArrayList<>();
         for (int i = 0; i <articlesModelList.size() ; i++) {
          //articlesModelList.get(i).setUserModel(userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
-            comments.add(i,  commentRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
-            userInfo.add(i,userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
+            comments.add(i,  articlesCommentsRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
+            userInfo.add(i,userInfoRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
         }
         res.put("ArticleList",articlesModelList);
         res.put("numberOfCommmentsList",comments);
-        res.put("corresponding user info",userInfo);
+        res.put("UserInfo",userInfo);
         return res;
     }
 
+
+
+    //GETDoubtList
+    public Map getDoubtList(Long userId, Long departmentID, Pageable pageable) {
+        Map<String,Object> res = new HashMap<>();
+
+        List<DoubtModel> doubtModelList=new ArrayList<>();
+        List<DoubtsAnswersModel> noOfAnswer=new ArrayList<>();
+        UserModel userModel1=knowUserModel(userId);
+        doubtModelList=doubtRepository.findAllByUserModelNotAndDeptId(userModel1,departmentID,pageable);
+        res.put("response","true");
+        List<UserInfoModel> userInfo=new ArrayList<>();
+        for (int i = 0; i <doubtModelList.size() ; i++) {
+            noOfAnswer.add(i,doubtsAnswersRepository.findByDoubtId(doubtModelList.get(i).getDoubtId()));
+            userInfo.add(i,userInfoRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
+        }
+        res.put("doubtlist",doubtModelList);
+        res.put("noOfCorrespondingAnswers",noOfAnswer);
+        res.put("UserInfo",userInfo);
+        return res;
+    }
 
     //GetComment
     public Map<String,Object> getComment(Long article_id,Pageable pageable) {
@@ -541,36 +660,14 @@ public class UserService {
         List<CommentModel> commentModelList=new ArrayList<>();
         commentModelList=commentRepository.findAllByArticleId(article_id,pageable);
         res.put("response","true");
-        List<String> userInfo=new ArrayList<>();
+        List<UserInfoModel> userInfo=new ArrayList<>();
         for (int i = 0; i <commentModelList.size() ; i++) {
-            userInfo.add(i,userRepository.findByUserId(commentModelList.get(i).getUserModel().getUserId()));
+            userInfo.add(i,userInfoRepository.findByUserId(commentModelList.get(i).getUserModel().getUserId()));
         }
         res.put("CommentList",commentModelList);
-        res.put("corresponding user info",userInfo);
+        res.put("UserInfo",userInfo);
         return res;
     }
-
-
-    //GETDoubtList
-    public Map getDoubtList(Long userId, Long departmentID, Pageable pageable) {
-        Map<String,Object> res = new HashMap<>();
-
-        List<DoubtModel> doubtModelList=new ArrayList<>();
-        List<Integer> noOfAnswer=new ArrayList<>();
-        UserModel userModel1=knowUserModel(userId);
-        doubtModelList=doubtRepository.findAllByUserModelNotAndDeptId(userModel1,departmentID,pageable);
-        res.put("response","true");
-        List<String> userInfo=new ArrayList<>();
-        for (int i = 0; i <doubtModelList.size() ; i++) {
-            noOfAnswer.add(i,answerRepository.findByDoubtId(doubtModelList.get(i).getDoubtId()));
-            userInfo.add(i,userRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
-        }
-        res.put("Doubtlist",doubtModelList);
-        res.put("noOfCorrespondingAnswers",noOfAnswer);
-        res.put("corresponding user info",userInfo);
-        return res;
-    }
-
 
 //GetAnswer
     public Map getAnswer(Long doubtId, Pageable pageable) {
@@ -578,13 +675,13 @@ public class UserService {
 
         List<AnswerModel> ansewerList=new ArrayList<>();
         ansewerList=answerRepository.findAllByDoubtId(doubtId,pageable);
-        List<String> userInfo=new ArrayList<>();
+        List<UserInfoModel> userInfo=new ArrayList<>();
         for (int i = 0; i <ansewerList.size() ; i++) {
-            userInfo.add(i,userRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
+            userInfo.add(i,userInfoRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
         }
         res.put("response","true");
         res.put("answerList",ansewerList);
-        res.put("correspondingUserInfo",userInfo);
+        res.put("UserInfo",userInfo);
         return res;
     }
     // END OF RETRIEVAL
@@ -629,26 +726,32 @@ public class UserService {
 
     public Map<String,Object> getYearWisePlacement(long comp_id) {
         Map<String,Object> res = new HashMap<>();
-        List<Object[]> studentModel=studentRepository.findByCompId(comp_id);
+        List<StudentListBaseModel> studentModel=studentListBaseRepository.findByCompId(comp_id);
         res.put("response",true);
         res.put("info",studentModel);
         return res;
 
     }
 
-    public Object getDeptWisePlacement(long comp_id) {
-        Object response=studentRepository.findByDeptCompId(comp_id);
-        return response;
+    public Map<String,Object> getDeptWisePlacement(long comp_id) {
+        Map<String,Object> res = new HashMap<>();
+        List<Object[]> response=studentRepository.findByDeptCompId(comp_id);
+        res.put("deptWiseInfo",response);
+        return res;
     }
 
-    public Object getstudentPlacementList(long comp_id,int yop,long colg_id) {
-        Object response=studentRepository.findByStudentCompId(comp_id,yop,colg_id);
-        return response;
+    public Map<String,Object> getstudentPlacementList(long comp_id,int yop,long colg_id) {
+        Map<String,Object> res = new HashMap<>();
+        List<Object[]> response=studentRepository.findByStudentCompId(comp_id,yop,colg_id);
+        res.put("studentPlacementInfo",response);
+        return res;
     }
 
-    public Object getstudentPlacementListDept(long comp_id, int year_of_passing, long colg_id, long dept_id) {
-        Object response=studentRepository.findByStudentCompIdDept(comp_id,year_of_passing,colg_id,dept_id);
-        return response;
+    public Map<String,Object> getstudentPlacementListDept(long comp_id, int year_of_passing, long colg_id, long dept_id) {
+        Map<String,Object> res = new HashMap<>();
+        List<Object[]> response=studentRepository.findByStudentCompIdDept(comp_id,year_of_passing,colg_id,dept_id);
+        res.put("studentInfoDeptWise",response);
+        return res;
     }
 
 
@@ -665,4 +768,10 @@ public class UserService {
     }
 
 
+    public Map<String,Object> getNetworkList(long user_id, long dept_id) {
+        Map<String,Object> res = new HashMap<>();
+        res.put("studentList",userRepository.findStudentByUserIdAndDeptId(user_id,dept_id));
+        res.put("facultyList",userRepository.findFacultyByUserIdAndDeptId(user_id,dept_id));
+        return res;
+    }
 }

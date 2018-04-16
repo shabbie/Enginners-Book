@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface UniversityRepository extends JpaRepository<UniversityModel, Long> {
 
-    @Query(value = "select univ_id from university where univ_name=:univ_name",nativeQuery = true)
+    @Query(value = "select uni_id from university where uni_name=:univ_name",nativeQuery = true)
     int findByUniName(@Param("univ_name")String univ_name);
 }

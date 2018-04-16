@@ -8,10 +8,38 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
 @EnableJpaRepositories
+@RunWith(SpringRunner.class)
 public class EngBookApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
+/*
+@Autowired UserModel userModel;
+	@MockBean private UserService userService;
+	private CheckInputService checkInputService=new CheckInputService();
 
+	@Before
+	public void setup()
+	{
+
+	}
+*/
+	@Test
+	public void textInputTest() {
+
+
+
+		//mresponse=checkInputService.inputText(text);
+		//return mresponse;
+
+	}
+	/*@Test
+	public Map<String,Object> dobInputTest() {
+	*/
+
+
+	/*@After
+	public void onTearDown()
+	{
+
+	}
+*/
 }

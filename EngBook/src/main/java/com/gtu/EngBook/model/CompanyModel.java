@@ -29,17 +29,28 @@ public class CompanyModel implements Serializable
     @Column(name = "domain")
     private String domain;
 
+    @Column(name = "profile_pic")
+    private String profilePic;
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
     /**
-     *
-     * @param compName
+     *  @param compName
      * @param compId
      * @param contact
      * @param hrContact
      * @param address
      * @param hr_name
      * @param domain
+     * @param profilePic
      */
-    public CompanyModel(String compName, long compId, long contact, long hrContact, String address, String hr_name, String domain) {
+    public CompanyModel(String compName, long compId, long contact, long hrContact, String address, String hr_name, String domain, String profilePic) {
         this.compName = compName;
         this.compId = compId;
         this.contact = contact;
@@ -47,9 +58,8 @@ public class CompanyModel implements Serializable
         this.address = address;
         this.hr_name = hr_name;
         this.domain = domain;
+        this.profilePic = profilePic;
     }
-
-
 
     public CompanyModel() {
     }

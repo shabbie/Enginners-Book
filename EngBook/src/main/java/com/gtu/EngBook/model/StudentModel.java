@@ -28,12 +28,11 @@ public class StudentModel implements Serializable {
     @Column(name = "interest")
     private String interest;
     @Column(name = "comp_id")
-    private String companyId;
+    private long companyId;
 
 
     /**
-     *
-     * @param userModel
+     *  @param userModel
      * @param enroll_no
      * @param dept_id
      * @param colg_id
@@ -43,7 +42,7 @@ public class StudentModel implements Serializable {
      * @param interest
      * @param companyId
      */
-    public StudentModel(UserModel userModel, long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, String interest, String companyId) {
+    public StudentModel(UserModel userModel, long enroll_no, int dept_id, int colg_id, int univId, int year_of_passing, int rank, String interest, long companyId) {
         this.userModel = userModel;
         this.enroll_no = enroll_no;
         this.dept_id = dept_id;
@@ -82,11 +81,11 @@ public class StudentModel implements Serializable {
         this.userModel = userModel;
     }
 
-    public String getCompanyId() {
+    public long getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(String companyId) {
+    public void setCompanyId(long companyId) {
         this.companyId = companyId;
     }
 
