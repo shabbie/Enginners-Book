@@ -4,12 +4,18 @@ import com.gtu.EngBook.model.*;
 import com.gtu.EngBook.model.TempModels.ArticlesCommentsModel;
 import com.gtu.EngBook.model.TempModels.DoubtsAnswersModel;
 import com.gtu.EngBook.model.TempModels.StudentListBaseModel;
-import com.gtu.EngBook.model.TempModels.UserInfoModel;
 import com.gtu.EngBook.repository.*;
 import com.gtu.EngBook.repository.TempRepositories.ArticlesCommentsRepository;
 import com.gtu.EngBook.repository.TempRepositories.DoubtsAnswersRepository;
 import com.gtu.EngBook.repository.TempRepositories.UserInfoRepository;
 import com.sendgrid.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +23,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.management.Notification;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.sql.SQLException;
@@ -60,13 +68,31 @@ public class UserService {
         return userRepository.findByUserId(userId);
     }
 
-    //SHOW PROFILE
-    public Map<String,Object> getProfile(long userId) {
+
+
+    //====================GET PROFILE DATA====================
+    public Map<String,Object> getProfileData(Long userId, Pageable pageable) {
         Map<String,Object> res = new HashMap<>();
+        List<ArticlesModel> articlesModelList=new ArrayList<>();
+        List<DoubtModel> doubtModelList=new ArrayList<>();
+        List<Integer> noOfAnswer=new ArrayList<>();
+        UserModel userModel1=knowUserModel(userId);
+        articlesModelList=articleRepository.findAllByUserModel(userModel1,pageable);
+        doubtModelList=doubtRepository.findAllByUserModel(userModel1,pageable);
+        res.put("response","true");
+        List<Integer> comments=new ArrayList<>();
+
+        for (int i = 0; i <articlesModelList.size() ; i++) {
+            comments.add(i,  commentRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
+        }
+        for (int i = 0; i <doubtModelList.size() ; i++) {
+            noOfAnswer.add(i,doubtRepository.findCountByDoubtId(doubtModelList.get(i).getDoubtId()));
+        }
 
         UserModel userModel=knowUserModel(userId);
         List<DoubtModel> doubtModel=doubtRepository.findAllByUserModel(userModel);
         List<AnswerModel> answerModel=answerRepository.findAllByUserModel(userModel);
+        List<ArticlesModel> articlesModelList1=articleRepository.findAllByUserModel(userModel);
 
         int count=0;
         for (int i = 0; i <doubtModel.size() ; i++) {
@@ -79,10 +105,14 @@ public class UserService {
             count+=answerModel1.getUpvote();
         }
 
-        res.put("user basic",userRepository.findByUserId(userId));
         res.put("point",count);
-        res.put("doubts solved",doubtModel.size());
-        res.put("doubts asked",answerModel.size());
+        res.put("doubtsAsked",doubtModel.size());
+        res.put("articlesAdded",articlesModelList1.size());
+
+        res.put("ArticleList",articlesModelList);
+        res.put("numberOfCommmentsList",comments);
+        res.put("doubtlist",doubtModelList);
+        res.put("noOfCorrespondingAnswers",noOfAnswer);
 
         return res;
     }
@@ -172,7 +202,7 @@ public class UserService {
         return res;
     }
 
-    public Map<String,Object> hodRegister(UserModel userModel, HodModel hodModel) throws IOException {
+    public Map<String,Object> hodRegister(UserModel userModel, HodModel hodModel, DepartmentModel departmentModel) throws IOException {
         Map<String,Object> res = new HashMap<>();
 
         if(userRepository.findOneByEmail(userModel.getEmail())!=null)
@@ -183,6 +213,7 @@ public class UserService {
         }
         //res=sendEmail(res);
         userModel.setHodModel(hodModel);
+        departmentRepository.save(departmentModel);
         hodModel.setUserModel(userModel);
 
         userRepository.save(userModel);
@@ -261,7 +292,7 @@ public class UserService {
 // Registration Completes
 
     //Login
-    public Map<String,Object> login(String email, String password)
+    public Map<String,Object> login(String email, String password, String fcmtoken)
     {
         UserModel userModel=userRepository.findOneByEmail(email);
         Map<String,Object> res = new HashMap<>();
@@ -272,6 +303,7 @@ public class UserService {
                     res.put("response", "true");
                     res.put("message", "Login Successfull");
                     userModel.setLoginStatus(true);
+                    userModel.setFcmToken(fcmtoken);
                     res.put("userId", userModel.getUserId());
                     res.put("userType", userModel.getUserType());
                     return res;
@@ -418,19 +450,52 @@ public class UserService {
         return res;
     }
 
+    //                  ===========FCM TOKEN===========
+    public Map<String,Object> sendNotification(String fcmtoken, String uname, String action,String type) throws JSONException, IOException {
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpPost post = new HttpPost("https://fcm.googleapis.com/fcm/send");
+        post.setHeader("Content-type", "application/map");
+        post.setHeader("Authorization", "key=AIzaSyBSxxxxsXevRq0trDbA9mhnY_2jqMoeChA");
+
+        Map<String,Object> message = new HashMap<>();
+        message.put("to", fcmtoken);
+        message.put("priority", "high");
+
+        JSONObject notification = new JSONObject();
+        notification.put("title", "Notification");
+        notification.put("body", uname+action+"your"+type);
+
+        message.put("notification", notification);
+
+        post.setEntity(new StringEntity(message.toString(), "UTF-8"));
+        HttpResponse response = client.execute(post);
+        System.out.println(response);
+        System.out.println(message);
+
+        return message;
+    }
+
     //update likes
-    public Map<String,Object> updateLikes(Long articleId,String type){
+    public Map<String,Object> updateLikes(Long articleId,String type, long user_id) throws IOException, JSONException {
         Map<String,Object> res = new HashMap<>();
 
         ArticlesModel articlesModel=articleRepository.findByArticleId(articleId);
+        UserModel userModel=knowUserModel(user_id);
         if(articlesModel!=null) {
-            if(type.equalsIgnoreCase("up"))
-            articlesModel.setLikes(articlesModel.getLikes() + 1);
-            else if (type.equalsIgnoreCase("down"))
+            if(type.equalsIgnoreCase("up")){
+                articlesModel.setLikes(articlesModel.getLikes() + 1);
+                res.put("fcmtokenresponse",sendNotification(userModel.getFcmToken(),userModel.getFname(),"liked","post"));
+            }
+            else if (type.equalsIgnoreCase("down")){
                 articlesModel.setLikes(articlesModel.getLikes() - 1);
+                res.put("fcmtokenresponse",sendNotification(userModel.getFcmToken(),userModel.getFname(),"disliked","post"));
+            }
+
             res.put("response", true);
             return res;
         }
+
+
         res.put("response",false);
         return res;
     }
@@ -448,16 +513,18 @@ public class UserService {
         return res;
     }
 
-    public Map<String,Object> doubtUpvote(long doubt_id) {
+    public Map<String,Object> doubtUpvote(long doubt_id, long user_id) {
 
         Map<String,Object> res = new HashMap<>();
 
         DoubtModel doubtModel=doubtRepository.findByDoubtId(doubt_id);
+        UserModel userModel=knowUserModel(user_id);
         if(doubtModel!=null) {
             doubtModel.setUpvote(doubtModel.getUpvote() + 1);
             res.put("response", true);
             return res;
         }
+        res.put("fcmtoken",userModel.getFcmToken());
         res.put("response",false);
         return res;
     }
@@ -476,15 +543,17 @@ public class UserService {
         return res;
     }
 
-    public Map<String,Object> answerUpvote(long answer_id) {
+    public Map<String,Object> answerUpvote(long answer_id, long user_id) {
         Map<String,Object> res = new HashMap<>();
 
         AnswerModel answerModel=answerRepository.findByAnswerId(answer_id);
+        UserModel userModel=knowUserModel(user_id);
         if(answerModel!=null) {
             answerModel.setUpvote(answerModel.getUpvote() + 1);
             res.put("response", true);
             return res;
         }
+        res.put("fcmtoken",userModel.getFcmToken());
         res.put("response",false);
         return res;
     }
@@ -503,16 +572,16 @@ public class UserService {
             //String.valueOf(request.getServletContext().getRealPath("/"))+
             //String.valueOf(request.getServletContext().getRealPath("/"))+
             try {
-                if (!new File( "G:\\Eng Book Android\\EngBook\\src\\main\\resources\\images\\"
+                if (!new File( "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
                         +type+"\\"
                         +username .replaceAll(" ", "")).exists()) {
                     mresponse.put("is_created",
-                            new File( "G:\\Eng Book Android\\EngBook\\src\\main\\resources\\images\\"
+                            new File( "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
                                     +type+"\\"
                                     + username.replaceAll(" ", "")).mkdir());
                 }
 //String.valueOf(request.getServletContext().getRealPath("/"))+
-                String filepath =  "G:\\Eng Book Android\\EngBook\\src\\main\\resources\\images\\"
+                String filepath =  "C:\\Users\\Shabbir Hussain\\Desktop\\EngBook\\src\\main\\resources\\images\\"
                         +type+"\\"
                         + username.replaceAll(" ", "") + "//" + fileName;
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filepath)));
@@ -611,6 +680,8 @@ public class UserService {
         return mresponse;
     }
 
+
+
     //getarticle
     public Map<String,Object> getArticle(Long userId, Long deptId, Pageable pageable) {
         Map<String,Object> res = new HashMap<>();
@@ -618,12 +689,12 @@ public class UserService {
         UserModel userModel1=knowUserModel(userId);
         articlesModelList=articleRepository.findAllByUserModelNotAndDeptId(userModel1,deptId,pageable);
         res.put("response","true");
-        List<UserInfoModel> userInfo=new ArrayList<>();
-        List<ArticlesCommentsModel> comments=new ArrayList<>();
+        List<String> userInfo=new ArrayList<>();
+        List<Integer> comments=new ArrayList<>();
         for (int i = 0; i <articlesModelList.size() ; i++) {
          //articlesModelList.get(i).setUserModel(userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
-            comments.add(i,  articlesCommentsRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
-            userInfo.add(i,userInfoRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
+            comments.add(i,  commentRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
+            userInfo.add(i,userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
         }
         res.put("ArticleList",articlesModelList);
         res.put("numberOfCommmentsList",comments);
@@ -638,14 +709,33 @@ public class UserService {
         Map<String,Object> res = new HashMap<>();
 
         List<DoubtModel> doubtModelList=new ArrayList<>();
-        List<DoubtsAnswersModel> noOfAnswer=new ArrayList<>();
+        List<Integer> noOfAnswer=new ArrayList<>();
         UserModel userModel1=knowUserModel(userId);
         doubtModelList=doubtRepository.findAllByUserModelNotAndDeptId(userModel1,departmentID,pageable);
         res.put("response","true");
-        List<UserInfoModel> userInfo=new ArrayList<>();
+        List<String> userInfo=new ArrayList<>();
         for (int i = 0; i <doubtModelList.size() ; i++) {
-            noOfAnswer.add(i,doubtsAnswersRepository.findByDoubtId(doubtModelList.get(i).getDoubtId()));
-            userInfo.add(i,userInfoRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
+            noOfAnswer.add(i,doubtRepository.findCountByDoubtId(doubtModelList.get(i).getDoubtId()));
+            userInfo.add(i,userRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
+        }
+        res.put("doubtlist",doubtModelList);
+        res.put("noOfCorrespondingAnswers",noOfAnswer);
+        res.put("UserInfo",userInfo);
+        return res;
+    }
+
+    public Map getFilteredDoubtList(Long userId, Long departmentID,String keyword,Pageable pageable) {
+        Map<String,Object> res = new HashMap<>();
+
+        List<DoubtModel> doubtModelList=new ArrayList<>();
+        List<Integer> noOfAnswer=new ArrayList<>();
+        UserModel userModel1=knowUserModel(userId);
+        doubtModelList=doubtRepository.findAllByUserModelNotAndDeptIdAndHeadingContaining(userModel1,departmentID,keyword,pageable);
+        res.put("response","true");
+        List<String> userInfo=new ArrayList<>();
+        for (int i = 0; i <doubtModelList.size() ; i++) {
+            noOfAnswer.add(i,doubtRepository.findCountByDoubtId(doubtModelList.get(i).getDoubtId()));
+            userInfo.add(i,userRepository.findByUserId(doubtModelList.get(i).getUserModel().getUserId()));
         }
         res.put("doubtlist",doubtModelList);
         res.put("noOfCorrespondingAnswers",noOfAnswer);
@@ -660,9 +750,9 @@ public class UserService {
         List<CommentModel> commentModelList=new ArrayList<>();
         commentModelList=commentRepository.findAllByArticleId(article_id,pageable);
         res.put("response","true");
-        List<UserInfoModel> userInfo=new ArrayList<>();
+        List<String> userInfo=new ArrayList<>();
         for (int i = 0; i <commentModelList.size() ; i++) {
-            userInfo.add(i,userInfoRepository.findByUserId(commentModelList.get(i).getUserModel().getUserId()));
+            userInfo.add(i,userRepository.findByUserId(commentModelList.get(i).getUserModel().getUserId()));
         }
         res.put("CommentList",commentModelList);
         res.put("UserInfo",userInfo);
@@ -675,9 +765,9 @@ public class UserService {
 
         List<AnswerModel> ansewerList=new ArrayList<>();
         ansewerList=answerRepository.findAllByDoubtId(doubtId,pageable);
-        List<UserInfoModel> userInfo=new ArrayList<>();
+        List<String> userInfo=new ArrayList<>();
         for (int i = 0; i <ansewerList.size() ; i++) {
-            userInfo.add(i,userInfoRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
+            userInfo.add(i,userRepository.findByUserId(ansewerList.get(i).getUserModel().getUserId()));
         }
         res.put("response","true");
         res.put("answerList",ansewerList);
@@ -770,8 +860,8 @@ public class UserService {
 
     public Map<String,Object> getNetworkList(long user_id, long dept_id) {
         Map<String,Object> res = new HashMap<>();
-        res.put("studentList",userRepository.findStudentByUserIdAndDeptId(user_id,dept_id));
-        res.put("facultyList",userRepository.findFacultyByUserIdAndDeptId(user_id,dept_id));
+        res.put("studentList",userInfoRepository.findStudentByUserIdAndDeptId(user_id,dept_id));
+        res.put("facultyList",userInfoRepository.findFacultyByUserIdAndDeptId(user_id,dept_id));
         return res;
     }
 }

@@ -11,4 +11,6 @@ public interface CommentRepository extends JpaRepository<CommentModel, Long > {
 
     public List<CommentModel> findAllByArticleId(Long artticleId, org.springframework.data.domain.Pageable pageable);
 
+    @Query(value = "SELECT count(comment_id) as c FROM comments WHERE article_id= :article_id", nativeQuery = true)
+    public Integer findByArticleId(@Param("article_id") long article_id);
 }

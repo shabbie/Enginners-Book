@@ -3,6 +3,7 @@ package com.gtu.EngBook.controller;
 import com.gtu.EngBook.model.*;
 import com.gtu.EngBook.service.UserService;
 import io.swagger.annotations.ApiParam;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-//import ;
+
 
 
 @RestController
@@ -23,12 +24,7 @@ public class UserController {
     UserService userService;
 
 
-    //									======PROFILE======
-    @RequestMapping(value = "/profile")
-    public Map<String, Object> showProfile(HttpServletRequest req) {
-        long userId = Long.parseLong(req.getParameter("user_id"));
-        return userService.getProfile(userId);
-    }
+
 
     @RequestMapping(value = "/profile/update")
     public Map<String, Object> updateProfile(HttpServletRequest req) throws IOException, SQLException {
@@ -110,7 +106,7 @@ public class UserController {
             userModel.setAddress(req.getParameter("addr"));
             userModel.setContact(Long.parseLong(req.getParameter("contact")));
             userModel.setEmail(req.getParameter("email"));
-
+            userModel.setUserType(req.getParameter("user_type"));
 
             //userModel.setProfilePic();
             MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) req;
@@ -158,6 +154,7 @@ public class UserController {
             userModel.setAddress(req.getParameter("addr"));
             userModel.setContact(Long.parseLong(req.getParameter("contact")));
             userModel.setEmail(req.getParameter("email"));
+            userModel.setUserType(req.getParameter("user_type"));
 
             String dept_name = req.getParameter("dept_name");
             facultyModel.setDept_id((int) userService.getDeptId(dept_name));
@@ -183,9 +180,9 @@ public class UserController {
     public Map<String, Object> hodregister(MultipartHttpServletRequest req) throws IOException, SQLException {
         HodModel hodModel = new HodModel();
         UserModel userModel = new UserModel();
+        DepartmentModel departmentModel=new DepartmentModel();
         HashMap<String, Object> mresponse = new HashMap<>();
         try {
-            //userModel.setProfilePic();
             MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) req;
             mresponse.put("images response", userService.setImageRegister(req, mrequest, "hodprofile", userModel));
             hodModel.setEnroll_no(Long.parseLong(req.getParameter("enroll")));
@@ -196,19 +193,23 @@ public class UserController {
             userModel.setAddress(req.getParameter("addr"));
             userModel.setContact(Long.parseLong(req.getParameter("contact")));
             userModel.setEmail(req.getParameter("email"));
+            userModel.setUserType(req.getParameter("user_type"));
 
-            String dept_name = req.getParameter("dept_name");
-            hodModel.setDept_id((int) userService.getDeptId(dept_name));
+            departmentModel.setDeptName(req.getParameter("dept_name"));
+            hodModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
+            departmentModel.setDept_id(Integer.parseInt(req.getParameter("dept_id")));
 
             String colg_name = req.getParameter("colg_name");
             hodModel.setColg_id(userService.getColgId(colg_name));
+            departmentModel.setColg_id(userService.getColgId(colg_name));
 
             String univ_name = req.getParameter("univ_name");
             hodModel.setUnivId(userService.getUnivId(univ_name));
+            departmentModel.setHod_name(req.getParameter("fname")+req.getParameter("lname"));
 
             userModel.setPassword(req.getParameter("pass"));
 
-            mresponse.put("hodRegistration", userService.hodRegister(userModel, hodModel));
+            mresponse.put("hodRegistration", userService.hodRegister(userModel, hodModel,departmentModel));
         } catch (Exception e) {
             mresponse.put("response", false);
             mresponse.put("message", e.getMessage() + e.getStackTrace());
@@ -223,9 +224,6 @@ public class UserController {
         UserModel userModel = new UserModel();
         HashMap<String, Object> mresponse = new HashMap<>();
         try {
-
-
-            //userModel.setProfilePic();
             MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) req;
             mresponse.put("images response", userService.setImageRegister(req, mrequest, "principalprofile", userModel));
             userModel.setFname(req.getParameter("fname"));
@@ -236,14 +234,13 @@ public class UserController {
             userModel.setContact((Long.parseLong(req.getParameter("contact"))));
             userModel.setEmail(req.getParameter("email"));
             userModel.setPassword(req.getParameter("pass"));
+            userModel.setUserType(req.getParameter("user_type"));
 
             collegeModel.setWebsite(req.getParameter("website"));
             collegeModel.setTpo_name(req.getParameter("tponame"));
+            collegeModel.setTpo_no(Long.parseLong(req.getParameter("tpono")));
             collegeModel.setColg_name(req.getParameter("colg_name"));
-
-
-            String colg_name = req.getParameter("colg_name");
-            collegeModel.setColgId(userService.getColgId(colg_name));
+            collegeModel.setColgId(Integer.parseInt(req.getParameter("colg_id")));
 
             String univ_name = req.getParameter("univ_name");
             collegeModel.setUniv_id(userService.getUnivId(univ_name));
@@ -265,7 +262,7 @@ public class UserController {
 
         HashMap<String, Object> mresponse = new HashMap<>();
         try {
-            //userModel.setProfilePic();
+
             MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) req;
             mresponse.put("images response", userService.setImageRegister(req, mrequest, "chancellorprofile", userModel));
             userModel.setFname(req.getParameter("fname"));
@@ -276,13 +273,11 @@ public class UserController {
             userModel.setContact((Long.parseLong(req.getParameter("contact"))));
             userModel.setEmail(req.getParameter("email"));
             userModel.setPassword(req.getParameter("pass"));
+            userModel.setUserType(req.getParameter("user_type"));
 
             universityModel.setUniv_name(req.getParameter("univname"));
             universityModel.setWebsite(req.getParameter("univwebsite"));
-
-
-            String univ_name = req.getParameter("univ_name");
-            universityModel.setUniv_id(userService.getUnivId(univ_name));
+            universityModel.setUniv_id(Integer.parseInt(req.getParameter("univid")));
 
             mresponse.put("chancellorRegistration", userService.chancellorRegister(userModel, universityModel));
         } catch (Exception e) {
@@ -323,7 +318,7 @@ public class UserController {
     @RequestMapping(value = "/login")
     public Map<String, Object> login(HttpServletRequest req) {
         Map map = new HashMap<String, Object>();
-        map.put("response", userService.login(req.getParameter("email"), req.getParameter("password")));
+        map.put("response", userService.login(req.getParameter("email"), req.getParameter("password"),req.getParameter("fcamtoken")));
         return map;
     }
 
@@ -362,10 +357,10 @@ FORGOT PASSSwORD
 
     //UPDATE LIKES
     @RequestMapping(value = "/updatelikes")
-    public Map<String, Object> updateLikes(HttpServletRequest req) {
+    public Map<String, Object> updateLikes(HttpServletRequest req) throws IOException, JSONException {
 
         return userService.updateLikes(Long.parseLong(req.getParameter("article_id")),
-                req.getParameter("type"));
+                req.getParameter("type"), Long.parseLong(req.getParameter("user_id")));
     }
 
     @RequestMapping(value = "/doubt/downvote")
@@ -377,7 +372,7 @@ FORGOT PASSSwORD
     @RequestMapping(value = "/doubt/upvote")
     public Map<String, Object> doubtUpvote(HttpServletRequest req) {
 
-        return userService.doubtUpvote(Long.parseLong(req.getParameter("doubt_id")));
+        return userService.doubtUpvote(Long.parseLong(req.getParameter("doubt_id")),Long.parseLong(req.getParameter("user_id")));
     }
 
     @RequestMapping(value = "/answer/downvote")
@@ -389,7 +384,7 @@ FORGOT PASSSwORD
     @RequestMapping(value = "/answer/upvote")
     public Map<String, Object> answerUpvote(HttpServletRequest req) {
 
-        return userService.answerUpvote(Long.parseLong(req.getParameter("answer_id")));
+        return userService.answerUpvote(Long.parseLong(req.getParameter("answer_id")),Long.parseLong("user_id"));
     }
     //ENDS
 
@@ -406,6 +401,13 @@ FORGOT PASSSwORD
 		map=userService.getArticle(userId,departmentID,pageable);
 		return map;
 	}*/
+
+    @GetMapping(value = "/getprofiledata/{userId}")
+    public Map<String, Object> getProfileData(@PathVariable("userId") Long userId, @ApiParam Pageable pageable) {
+        Map map = new HashMap<>();
+        map = userService.getProfileData(userId, pageable);
+        return map;
+    }
 
     @GetMapping(value = "/getarticle/{userId}/{departmentId}")
     public Map<String, Object> getArticle(@PathVariable("userId") Long userId, @PathVariable("departmentId") Long departmentID, @ApiParam Pageable pageable) {
@@ -429,6 +431,15 @@ FORGOT PASSSwORD
         Map map = new HashMap<>();
 
         map = userService.getDoubtList(userId, departmentID, pageable);
+        return map;
+    }
+
+    @GetMapping(value = "/getdoubtlist/{userId}/{departmentId}/{keyword}")
+    public Map<String, Object> getFilteredDoubtList(@PathVariable("userId") Long userId, @PathVariable("departmentId") Long departmentID,@PathVariable("keyword") String keyword, @ApiParam Pageable pageable) {
+
+        Map map = new HashMap<>();
+
+        map = userService.getFilteredDoubtList(userId, departmentID,keyword, pageable);
         return map;
     }
 

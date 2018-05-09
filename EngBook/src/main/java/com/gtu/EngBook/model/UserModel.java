@@ -56,6 +56,9 @@ public class UserModel implements Serializable {
     @Column(name = "token")
     private String token;
 
+    @Column(name = "fcmtoken")
+    private String fcmToken;
+
 
     // Relationship
     @OneToOne(mappedBy = "userModel", cascade=CascadeType.ALL)
@@ -112,6 +115,13 @@ public class UserModel implements Serializable {
         this.answerModel = answerModel;
     }
 
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
     public HodModel getHodModel() {
         return hodModel;
     }
@@ -307,6 +317,7 @@ public class UserModel implements Serializable {
      * @param userType
      * @param approved
      * @param token
+     * @param fcmToken
      * @param studentModel
      * @param facultyModel
      * @param hodModel
@@ -317,7 +328,7 @@ public class UserModel implements Serializable {
      * @param doubtModel
      * @param answerModel
      */
-    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, String profilePic, int gender, String dob, String email, long contact, String address, String userType, boolean approved, String token, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, List<ArticlesModel> articlesModel, List<CommentModel> commentModel, List<CommentModel> doubtModel, List<AnswerModel> answerModel) {
+    public UserModel(long userId, String password, boolean loginStatus, String fname, String lname, String profilePic, int gender, String dob, String email, long contact, String address, String userType, boolean approved, String token, String fcmToken, StudentModel studentModel, FacultyModel facultyModel, HodModel hodModel, CollegeModel collegeModel, UniversityModel universityModel, List<ArticlesModel> articlesModel, List<CommentModel> commentModel, List<CommentModel> doubtModel, List<AnswerModel> answerModel) {
         this.userId = userId;
         this.password = password;
         this.loginStatus = loginStatus;
@@ -332,6 +343,7 @@ public class UserModel implements Serializable {
         this.userType = userType;
         this.approved = approved;
         this.token = token;
+        this.fcmToken = fcmToken;
         this.studentModel = studentModel;
         this.facultyModel = facultyModel;
         this.hodModel = hodModel;

@@ -16,13 +16,5 @@ public interface UserRepository extends JpaRepository<UserModel, String > {
     public UserModel findByUserId(Long user_id);
 
     @Query(value = "SELECT user_id,fname,lname,profile_pic FROM user WHERE user_id= :user_id", nativeQuery = true)
-    public UserInfoModel findByUserId(@Param("user_id") long user_id);
-
-
-
-    @Query(value = "SELECT user.user_id,fname,lname,profile_pic FROM user join student WHERE user.user_id!=:user_id and dept_id=:dept_id and user.user_id=student.user_id ", nativeQuery = true)
-    public List<String> findStudentByUserIdAndDeptId(@Param("user_id") long user_id, @Param("dept_id") long dept_id);
-
-    @Query(value = "SELECT user.user_id,fname,lname,profile_pic FROM user join faculty WHERE user.user_id!=:user_id and dept_id=:dept_id and user.user_id=faculty.user_id", nativeQuery = true)
-    public List<String> findFacultyByUserIdAndDeptId(@Param("user_id") long user_id,@Param("dept_id") long dept_id);
+    public String findByUserId(@Param("user_id") long user_id);
 }
