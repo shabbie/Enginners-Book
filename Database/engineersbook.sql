@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2018 at 08:42 AM
+-- Generation Time: May 09, 2018 at 06:32 PM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 7.1.7
 
@@ -96,10 +96,10 @@ CREATE TABLE `articles` (
 
 INSERT INTO `articles` (`user_id`, `dept_id`, `article_id`, `likes`, `article_type`, `article_text`, `article_image`, `create_time`) VALUES
 (1, 7, 1, 1, 1, 'hello there', NULL, 0),
-(3, 7, 2, 0, 1, 'second art', NULL, 0),
-(2, 7, 3, 0, 1, 'another user', NULL, 0),
-(2, 7, 4, 0, 0, 'abc', NULL, 0),
-(2, 7, 5, 0, 0, 'the text of doubt', NULL, 1521963516863);
+(3, 7, 2, 0, 1, 'second art/*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELECT', NULL, 0),
+(2, 7, 3, 0, 1, 'another user/*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELE', NULL, 0),
+(2, 7, 4, 0, 0, 'abc/*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*//*@Query(value = \"SELECT * from doubts where user_id!=:user_id and dept_id=:dept_id and heading like \'%:heading%\'\", nativeQuery = true)\r\n    public List<DoubtModel> findAllByUserModelNotAndDeptIdAndHeading(@Param(\"user_id\")long user_id, @Param(\"dept_id\")long dept_id, @Param(\"heading\")String heading, Pageable pageable);*/', NULL, 0),
+(55, 7, 5, 0, 0, 'the text of doubt', NULL, 1521963516863);
 
 -- --------------------------------------------------------
 
@@ -122,9 +122,7 @@ CREATE TABLE `college` (
 --
 
 INSERT INTO `college` (`user_id`, `univ_id`, `colg_id`, `colg_name`, `website`, `tpo_no`, `tpo_name`) VALUES
-('1', '1', 41, 'SVIT', 'svitvasad.ac.in', 9999999999, 'Ajit Shah'),
-('18', '2154', 42, 'parul', 'www.svit.com', 0, 'ajit shah'),
-('21', '2154', 43, 'svi', 'www.svit.com', 0, 'ajit shah');
+('63', '115', 41, 'SVIT', 'svitvasad.ac.in', 9976479956, 'Ajit');
 
 -- --------------------------------------------------------
 
@@ -193,7 +191,7 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`dept_id`, `dept_name`, `hod_name`, `placements`, `colg_id`) VALUES
-(7, 'computer', 'bijal mam', 0, 41);
+(7, 'Computer', 'BijalTalati', 0, 41);
 
 -- --------------------------------------------------------
 
@@ -226,7 +224,7 @@ INSERT INTO `doubts` (`doubt_id`, `user_id`, `dept_id`, `heading`, `text`, `doub
 (5, 4, 7, 'Problem!!', 'the text of doubt', NULL, 'C', 0, 0, 0),
 (6, 5, 7, 'help!', 'the text of doubt', NULL, 'C', 0, 0, 0),
 (7, 4, 7, 'can you help me', 'the text of doubt', NULL, 'C', 0, 0, 1521961765869),
-(8, 3, 7, 'why so serious?', 'the text of doubt', NULL, 'C', 0, 0, 1521962446504);
+(8, 3, 7, 'java doubt', 'the text of doubt', NULL, 'C', 0, 0, 1521962446504);
 
 -- --------------------------------------------------------
 
@@ -248,8 +246,10 @@ CREATE TABLE `faculty` (
 --
 
 INSERT INTO `faculty` (`enroll_no`, `user_id`, `dept_id`, `colg_id`, `univ_id`, `ranking`) VALUES
+(1404679567, 56, 7, 41, 222, 0),
 (14041071222, 13, 7, 41, 2154, 0),
 (14041071223, 31, 7, 41, 222, 0),
+(140412107056, 53, 7, 41, 222, 0),
 (540410107024, 33, 7, 41, 222, 0);
 
 -- --------------------------------------------------------
@@ -272,7 +272,7 @@ CREATE TABLE `hod` (
 --
 
 INSERT INTO `hod` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, `ranking`) VALUES
-(14, 14041071223, 7, 41, 2154, 0);
+(66, 109764794653, 7, 41, 115, 0);
 
 -- --------------------------------------------------------
 
@@ -319,6 +319,9 @@ INSERT INTO `student` (`user_id`, `enroll_no`, `dept_id`, `colg_id`, `univ_id`, 
 (24, 140410107025, 7, 41, 222, 2018, 0, '', 0),
 (27, 140410107037, 7, 41, 222, 2018, 0, '', 0),
 (37, 140410107045, 7, 41, 222, 2017, 0, '', 0),
+(52, 140410107055, 7, 41, 222, 2018, 0, 'Android', 0),
+(54, 140423652852, 7, 41, 222, 2018, 0, 'Java', 0),
+(55, 143410108056, 7, 41, 222, 2018, 0, 'Android', 0),
 (41, 1404101070003, 7, 41, 222, 2018, 0, '', 0);
 
 -- --------------------------------------------------------
@@ -339,7 +342,7 @@ CREATE TABLE `university` (
 --
 
 INSERT INTO `university` (`user_id`, `uni_name`, `uni_id`, `website`) VALUES
-('22', 'GTU', '222', 'gtu.ac.in');
+('62', 'GTU', '115', 'gtu.ac.in');
 
 -- --------------------------------------------------------
 
@@ -360,48 +363,57 @@ CREATE TABLE `user` (
   `contact` bigint(13) NOT NULL,
   `address` text NOT NULL,
   `user_type` varchar(10) DEFAULT NULL,
-  `approved` tinyint(1) NOT NULL DEFAULT '0',
-  `token` varchar(7) DEFAULT NULL
+  `approved` tinyint(1) NOT NULL DEFAULT '1',
+  `token` varchar(7) DEFAULT NULL,
+  `fcmtoken` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `password`, `login_status`, `fname`, `lname`, `profile_pic`, `gender`, `dob`, `email`, `contact`, `address`, `user_type`, `approved`, `token`) VALUES
-(1, '1234', 1, 'shabbir', 'bhaisaheb', '', 0, '2017-12-11', 'abc@gmail.com', 9033257850, '', 'student', 0, 'OPEVGBF'),
-(2, '1234', 1, 'abhi', 'koranne', '', 0, '2017-12-11', 'abhishekkoranne@gmail.com', 9999999999, '', 'faculty', 1, '8XBCVE1'),
-(3, '1234', 0, 'Shabbir', 'bhaisaheb', '', 0, '1996-09-15', 'shabbirhussainb@gmail.com', 9033257850, '', 'student', 1, NULL),
-(4, '12345', 1, 'shabbir', 'bhaisaheb', '', 0, '15-09-1996', 'abhi@gmail.com', 9033257850, '', NULL, 1, NULL),
-(5, '12345', 0, 'charu', 'bhadaurya', '', 1, '15-04-1996', 'avs@gasjb.com', 9233257850, 'abc bunglow, vadodara', NULL, 0, NULL),
-(10, '12345', 0, 'ra', 'chan', '', 0, '15-04-1997', 'avs@gasb.com', 9233257855, 'ab bunglow, vadodara', NULL, 0, NULL),
-(13, '123456', 0, 'nitin', 'patel', '', 0, '15-09-1986', 'avc@gasjb.com', 9033257750, 'aligadh', NULL, 0, NULL),
-(14, '123456', 0, 'Bijal', 'talati', '', 1, '15-09-1976', 'avc@gasb.com', 9033254750, 'majalpura', NULL, 0, NULL),
-(18, '123456', 0, 'jayesh', 'deshkar', '', 0, '15-09-1966', 'avc@gab.com', 9033257755, 'anand', NULL, 0, NULL),
-(21, '123456', 0, 'jayesh', 'deshkar', '', 0, '15-09-1966', 'avc@ga.com', 9033257759, 'anand', NULL, 0, NULL),
-(22, '123456', 0, 'ni', 'pa', '', 0, '15-09-1966', 'avc@gaqb.com', 9033257744, 'amdavad', NULL, 0, NULL),
-(24, '12345', 0, 'absk', 'korr', '', 0, '15-04-1995', 'abss@gasb.com', 9233257855, 'abc bunglow, vadodara', NULL, 0, NULL),
-(25, '1234', 0, 'hshdh', 'bznzn', '', 0, '24/04/1996', 'zhab@sjsj.com', 898979, 'dvdbdb', NULL, 0, NULL),
-(26, '12345', 0, 'abs', 'kor', '', 0, '15-04-1994', 'abqs@gasb.com', 92332578500, 'abc bunglow, vadodara', NULL, 0, NULL),
-(27, '12345', 0, 'abs', 'kor', '', 0, '15-04-1994', 'abqs@asb.com', 92332578500, 'abc bunglow, vadodara', NULL, 0, NULL),
-(29, '12345', 0, 'abs', 'kor', '', 0, '15-04-1994', 'abqs@as.com', 92332578500, 'abc bunglow, vadodara', NULL, 0, NULL),
-(30, '12345', 0, 'abs', 'kor', '', 0, '15-04-1994', 'abqs@a.com', 92332578500, 'abc bunglow, vadodara', NULL, 0, NULL),
-(31, '123456', 0, 'niti', 'jain', '', 0, '15-09-1986', 'av@gasjb.com', 9033257750, 'aligadh', NULL, 0, NULL),
-(32, '12345', 0, 'abs', 'kor', '', 0, '15-04-1994', 'abqs@add.com', 92332578500, 'abc bunglow, vadodara', NULL, 0, NULL),
-(33, '1234', 0, 'Hiren', 'Patel', '', 0, '25/06/1986', 'hirenpatel@gmail.com', 9556432256, 'Abcdef', NULL, 0, NULL),
-(34, 'avc', 1, 'vineet', 'chotrani', '', 0, '05/03/1997', 'rajkumar@gmail.com', 9737486668, 'abc banglows, opp. juhu beach', NULL, 1, NULL),
-(35, '12345', 0, 'abs', 'kor', '', 0, '15-04-1994', 'abqs@gmail.com', 92332578500, 'abc bunglow, vadodara', NULL, 0, NULL),
-(36, 'hshs', 0, 'hzhzh', 'nxnxn', 'EngBook\\src\\main\\resources\\images\\studentprofile\\hzhzh//cropped2141461264.jpg', 0, '67/68//8', 'bxbz@hssj.djxkk', 9898, 'hxxhh', NULL, 0, NULL),
-(37, '1234', 0, 'czvs', 'hzbz', 'EngBook\\src\\main\\resources\\images\\studentprofile\\czvs//cropped2095415195.jpg', 0, '24/04/1999', 'sghs@hshs.com', 9979794456, 'zbzbbz', NULL, 0, NULL),
-(38, '1234', 1, 'vabz', 'vxbx', 'EngBook\\src\\main\\resources\\images\\studentprofile\\vabz//cropped686292479.jpg', 0, '52/55/', 'xyz@gmail.com', 7587877, 'tacV', NULL, 1, NULL),
-(39, '1234', 0, 'jigish', 'vyas', 'EngBook\\src\\main\\resources\\images\\studentprofile\\jigish//imgDog.jpg', 0, '13-04-1996', 'vyas.jigish13@gmail.com', 7874056649, 'xyz bunglow, vadodara', NULL, 0, NULL),
-(41, '1234', 0, 'anuj', 'bhrambhatt', 'EngBook\\src\\main\\resources\\images\\studentprofile\\anuj//imgDog.jpg', 0, '13-05-1996', 'anuj@gmail.com', 987654321, 'pqr bunglow, vadodara', NULL, 0, NULL),
-(44, 'nzbzbz', 0, 'hzhAh', 'nznzn', 'EngBook\\src\\main\\resources\\images\\studentprofile\\hzhAh//cropped1440732062.jpg', 0, '2/2/5', 'jxnznzn', 659797979, 'hzhzhz', NULL, 0, NULL),
-(45, '1234', 0, 'charles', 'patel', 'EngBook\\src\\main\\resources\\images\\studentprofile\\charles//imgDog.jpg', 0, '13-05-1997', 'charles@gmail.com', 987654320, 'qwertty bunglow, vadodara', NULL, 0, NULL),
-(46, 'nnnn', 0, 'zsvsv', 'jdjxn', 'EngBook\\src\\main\\resources\\images\\studentprofile\\zsvsv//cropped2073650192.jpg', 0, '5/5/5/', 'bddsh', 686867, 'bhzhzj', NULL, 0, NULL),
-(47, '1234', 0, 'adutya', 'choksi', 'EngBook\\src\\main\\resources\\images\\studentprofile\\adutyachoksi@gmail.com//imonkey.jpg', 0, '13-05-1995', 'choksi@gmail.com', 987654322, 'qwertty bunglow, vadodara', NULL, 0, NULL),
-(50, '12345', 0, 'hiral', 'dalwadi', 'EngBook\\src\\main\\resources\\images\\studentprofile\\hiralhiral@gasb.com//Recylcer_View-Steps.png', 0, '15-04-1997', 'hiral@gasb.com', 923325755, 'ab bunglow, vadodara', NULL, 0, NULL),
-(51, 'yzhzh', 0, 'zhzhHH', 'jHHJ', 'EngBook\\src\\main\\resources\\images\\studentprofile\\zhzhHHzhzhz//cropped739547515.jpg', 0, '97/6/6/8', 'zhzhz', 37677, 'hzjzh', NULL, 0, NULL);
+INSERT INTO `user` (`user_id`, `password`, `login_status`, `fname`, `lname`, `profile_pic`, `gender`, `dob`, `email`, `contact`, `address`, `user_type`, `approved`, `token`, `fcmtoken`) VALUES
+(1, '1234', 1, 'shabbir', 'bhaisaheb', NULL, 0, '2017-12-11', 'abc@gmail.com', 9033257850, '', 'student', 1, 'OPEVGBF', NULL),
+(2, '1234', 1, 'abhi', 'koranne', NULL, 0, '2017-12-11', 'abhishekkoranne@gmail.com', 9999999999, '', 'faculty', 1, '8XBCVE1', ''),
+(3, '1234', 0, 'Shabbir', 'bhaisaheb', NULL, 0, '1996-09-15', 'shabbirhussainb@gmail.com', 9033257850, '', 'student', 1, NULL, ''),
+(4, '1234', 1, 'shabbir', 'bhaisaheb', NULL, 0, '15-09-1996', 'abhi@gmail.com', 9033257850, '', NULL, 1, NULL, NULL),
+(5, '12345', 0, 'charu', 'bhadaurya', NULL, 1, '15-04-1996', 'avs@gasjb.com', 9233257850, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(10, '12345', 0, 'ra', 'chan', NULL, 0, '15-04-1997', 'avs@gasb.com', 9233257855, 'ab bunglow, vadodara', NULL, 1, NULL, ''),
+(13, '123456', 0, 'nitin', 'patel', NULL, 0, '15-09-1986', 'avc@gasjb.com', 9033257750, 'aligadh', NULL, 1, NULL, ''),
+(14, '123456', 0, 'Bijal', 'talati', NULL, 1, '15-09-1976', 'avc@gasb.com', 9033254750, 'majalpura', NULL, 1, NULL, ''),
+(18, '123456', 0, 'jayesh', 'deshkar', NULL, 0, '15-09-1966', 'avc@gab.com', 9033257755, 'anand', NULL, 1, NULL, ''),
+(21, '123456', 0, 'jayesh', 'deshkar', NULL, 0, '15-09-1966', 'avc@ga.com', 9033257759, 'anand', NULL, 1, NULL, ''),
+(22, '123456', 0, 'ni', 'pa', NULL, 0, '15-09-1966', 'avc@gaqb.com', 9033257744, 'amdavad', NULL, 1, NULL, ''),
+(24, '12345', 0, 'absk', 'korr', NULL, 0, '15-04-1995', 'abss@gasb.com', 9233257855, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(25, '1234', 0, 'hshdh', 'bznzn', NULL, 0, '24/04/1996', 'zhab@sjsj.com', 898979, 'dvdbdb', NULL, 1, NULL, ''),
+(26, '12345', 0, 'abs', 'kor', NULL, 0, '15-04-1994', 'abqs@gasb.com', 92332578500, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(27, '12345', 0, 'abs', 'kor', NULL, 0, '15-04-1994', 'abqs@asb.com', 92332578500, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(29, '12345', 0, 'abs', 'kor', NULL, 0, '15-04-1994', 'abqs@as.com', 92332578500, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(30, '12345', 0, 'abs', 'kor', NULL, 0, '15-04-1994', 'abqs@a.com', 92332578500, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(31, '123456', 0, 'niti', 'jain', NULL, 0, '15-09-1986', 'av@gasjb.com', 9033257750, 'aligadh', NULL, 1, NULL, ''),
+(32, '12345', 0, 'abs', 'kor', NULL, 0, '15-04-1994', 'abqs@add.com', 92332578500, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(33, '1234', 0, 'Hiren', 'Patel', NULL, 0, '25/06/1986', 'hirenpatel@gmail.com', 9556432256, 'Abcdef', NULL, 1, NULL, ''),
+(34, 'avc', 1, 'vineet', 'chotrani', NULL, 0, '05/03/1997', 'rajkumar@gmail.com', 9737486668, 'abc banglows, opp. juhu beach', NULL, 1, NULL, ''),
+(35, '12345', 0, 'abs', 'kor', NULL, 0, '15-04-1994', 'abqs@gmail.com', 92332578500, 'abc bunglow, vadodara', NULL, 1, NULL, ''),
+(36, 'hshs', 0, 'hzhzh', 'nxnxn', 'EngBook\\src\\main\\resources\\images\\studentprofile\\hzhzh//cropped2141461264.jpg', 0, '67/68//8', 'bxbz@hssj.djxkk', 9898, 'hxxhh', NULL, 1, NULL, ''),
+(37, '1234', 0, 'czvs', 'hzbz', 'EngBook\\src\\main\\resources\\images\\studentprofile\\czvs//cropped2095415195.jpg', 0, '24/04/1999', 'sghs@hshs.com', 9979794456, 'zbzbbz', NULL, 1, NULL, ''),
+(38, '1234', 1, 'vabz', 'vxbx', 'EngBook\\src\\main\\resources\\images\\studentprofile\\vabz//cropped686292479.jpg', 0, '52/55/', 'xyz@gmail.com', 7587877, 'tacV', NULL, 1, NULL, ''),
+(39, '1234', 0, 'jigish', 'vyas', 'EngBook\\src\\main\\resources\\images\\studentprofile\\jigish//imgDog.jpg', 0, '13-04-1996', 'vyas.jigish13@gmail.com', 7874056649, 'xyz bunglow, vadodara', NULL, 1, NULL, ''),
+(41, '1234', 0, 'anuj', 'bhrambhatt', 'EngBook\\src\\main\\resources\\images\\studentprofile\\anuj//imgDog.jpg', 0, '13-05-1996', 'anuj@gmail.com', 987654321, 'pqr bunglow, vadodara', NULL, 1, NULL, ''),
+(44, 'nzbzbz', 0, 'hzhAh', 'nznzn', 'EngBook\\src\\main\\resources\\images\\studentprofile\\hzhAh//cropped1440732062.jpg', 0, '2/2/5', 'jxnznzn', 659797979, 'hzhzhz', NULL, 1, NULL, ''),
+(45, '1234', 0, 'charles', 'patel', 'EngBook\\src\\main\\resources\\images\\studentprofile\\charles//imgDog.jpg', 0, '13-05-1997', 'charles@gmail.com', 987654320, 'qwertty bunglow, vadodara', NULL, 1, NULL, ''),
+(46, 'nnnn', 0, 'zsvsv', 'jdjxn', 'EngBook\\src\\main\\resources\\images\\studentprofile\\zsvsv//cropped2073650192.jpg', 0, '5/5/5/', 'bddsh', 686867, 'bhzhzj', NULL, 1, NULL, ''),
+(47, '1234', 0, 'adutya', 'choksi', 'EngBook\\src\\main\\resources\\images\\studentprofile\\adutyachoksi@gmail.com//imonkey.jpg', 0, '13-05-1995', 'choksi@gmail.com', 987654322, 'qwertty bunglow, vadodara', NULL, 1, NULL, ''),
+(50, '12345', 0, 'hiral', 'dalwadi', 'EngBook\\src\\main\\resources\\images\\studentprofile\\hiralhiral@gasb.com//Recylcer_View-Steps.png', 0, '15-04-1997', 'hiral@gasb.com', 923325755, 'ab bunglow, vadodara', NULL, 1, NULL, ''),
+(51, 'yzhzh', 0, 'zhzhHH', 'jHHJ', 'EngBook\\src\\main\\resources\\images\\studentprofile\\zhzhHHzhzhz//cropped739547515.jpg', 0, '97/6/6/8', 'zhzhz', 37677, 'hzjzh', NULL, 1, NULL, ''),
+(52, '1234', 0, 'Testing', 'test2', 'EngBook\\src\\main\\resources\\images\\studentprofile\\Testingtest@gm.com//cropped3389815436151722392.jpg', 0, '24/06/96', 'test@gm.com', 9865326495, 'Addr test', NULL, 1, NULL, ''),
+(53, '1234', 0, 'Ahg', 'Dhg', 'EngBook\\src\\main\\resources\\images\\facultyprofile\\Ahgahgdhg@gm.com//cropped1289601764654773252.jpg', 0, '24/06/96', 'ahgdhg@gm.com', 9809524456, 'addr', NULL, 1, NULL, ''),
+(54, '1234', 0, 'Jigyo', 'dtg', 'EngBook\\src\\main\\resources\\images\\studentprofile\\Jigyojigdtg@gm.com//cropped622624522575756991.jpg', 0, '8/4/17', 'jigdtg@gm.com', 9909064432, 'ST Depo', NULL, 1, NULL, ''),
+(55, '1234', 0, 'Jigyo', 'Vyas', 'EngBook\\src\\main\\resources\\images\\studentprofile\\Jigyojigyovyas@gm.com//cropped3573231640901492446.jpg', 0, '13/04/1996', 'jigyovyas@gm.com', 9946413346, 'Airport', 'student', 1, NULL, ''),
+(56, '1234', 0, 'Jigido', 'vyaso', 'EngBook\\src\\main\\resources\\images\\facultyprofile\\Jigidojigido@gm.com//cropped1328054556285155453.jpg', 0, '8/02/2018', 'jigido@gm.com', 9090909990, 'St', 'faculty', 1, NULL, ''),
+(62, '1234', 0, 'Yash', 'Shah', 'EngBook\\src\\main\\resources\\images\\chancellorprofile\\Yashchancellor@gtu.ac.in//cropped8855105068794818558.jpg', 0, '4/2/1970', 'chancellor@gtu.ac.in', 9976456679, 'Gandhinagar', 'chancellor', 1, NULL, NULL),
+(63, '1234', 0, 'Jayesh', 'Deshkar', 'EngBook\\src\\main\\resources\\images\\principalprofile\\Jayeshprincipal@svitvasad.ac//cropped1844086428351372032.jpg', 0, '4/2/1978', 'principal@svitvasad.ac', 9976431156, 'Vadodara', 'principal', 1, NULL, NULL),
+(66, '1234', 0, 'Bijal', 'Talati', 'EngBook\\src\\main\\resources\\images\\hodprofile\\Bijalhod@svitvasad.ac.in//cropped3175508087658863470.jpg', 1, '4/6/1986', 'hod@svitvasad.ac.in', 9976451123, 'Vadodara', 'hod', 1, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -541,7 +553,7 @@ ALTER TABLE `doubts`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;COMMIT;
+  MODIFY `user_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
