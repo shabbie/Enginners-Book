@@ -461,9 +461,12 @@ FORGOT PASSSwORD
     public Map<String, Object> addDoubt(MultipartHttpServletRequest request) throws IOException, SQLException {
         Map<String, Object> mresponse = new HashMap<>();
         DoubtModel doubtModel = new DoubtModel();
+        Map<String , Object> temp=new HashMap<>();
         //images
         MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) request;
         mresponse.put("images response", userService.setImage(request, mrequest, "doubt"));
+        temp=userService.setImage(request, mrequest, "article");
+        doubtModel.setDoubtImage(temp.get("imagePath").toString());
 
         doubtModel.setText(request.getParameter("text"));
         doubtModel.setDeptId(Long.parseLong(request.getParameter("dept_id")));
@@ -482,20 +485,26 @@ FORGOT PASSSwORD
     public Map<String, Object> addArticle(MultipartHttpServletRequest request) throws SQLException, IOException {
         Map<String, Object> mresponse = new HashMap<>();
         ArticlesModel articlesModel = new ArticlesModel();
-
+        Map<String , Object> temp=new HashMap<>();
 
         articlesModel.setArticleText(request.getParameter("text"));
-        if (articlesModel.getArticleImage() == null) {
+        if (Integer.parseInt(request.getParameter("articletype"))==0) {
             articlesModel.setArticleType(0);
         } else {
             MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) request;
-            mresponse.put("images response", userService.setImage(request, mrequest, "article"));
+            mresponse.put("imagesResponse", userService.setImage(request, mrequest, "article"));
             articlesModel.setArticleType(1);
+            temp=userService.setImage(request, mrequest, "article");
+            articlesModel.setArticleImage(temp.get("imagePath").toString());
         }
 
         articlesModel.setUserModel(userService.knowUserModel(Long.parseLong(request.getParameter("user_id"))));
         articlesModel.setDeptId(Long.parseLong(request.getParameter("dept_id")));
         articlesModel.setCreateTime(System.currentTimeMillis());
+        String type=request.getParameter("type");
+        if (type.equalsIgnoreCase("public"))
+            articlesModel.setType(true);
+        else articlesModel.setType(false);
 
         mresponse.put("article_response", userService.addArticle(articlesModel));
 
@@ -521,9 +530,13 @@ FORGOT PASSSwORD
     public Map<String, Object> addAnswer(MultipartHttpServletRequest req) throws SQLException, IOException {
         Map<String, Object> mresponse = new HashMap<>();
         AnswerModel answerModel = new AnswerModel();
+        Map<String , Object> temp=new HashMap<>();
+
 
         MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) req;
         mresponse.put("images response", userService.setImage(req, mrequest, "answer"));
+        temp=userService.setImage(req, mrequest, "article");
+        answerModel.setAnswerImage(temp.get("imagePath").toString());
         answerModel.setText(req.getParameter("text"));
         answerModel.setDoubtId(Long.parseLong(req.getParameter("doubt_id")));
         answerModel.setUserModel(userService.knowUserModel(Long.parseLong(req.getParameter("user_id"))));

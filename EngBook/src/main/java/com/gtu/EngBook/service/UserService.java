@@ -75,19 +75,11 @@ public class UserService {
         Map<String,Object> res = new HashMap<>();
         List<ArticlesModel> articlesModelList=new ArrayList<>();
         List<DoubtModel> doubtModelList=new ArrayList<>();
-        List<Integer> noOfAnswer=new ArrayList<>();
         UserModel userModel1=knowUserModel(userId);
         articlesModelList=articleRepository.findAllByUserModel(userModel1,pageable);
         doubtModelList=doubtRepository.findAllByUserModel(userModel1,pageable);
         res.put("response","true");
-        List<Integer> comments=new ArrayList<>();
 
-        for (int i = 0; i <articlesModelList.size() ; i++) {
-            comments.add(i,  commentRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
-        }
-        for (int i = 0; i <doubtModelList.size() ; i++) {
-            noOfAnswer.add(i,doubtRepository.findCountByDoubtId(doubtModelList.get(i).getDoubtId()));
-        }
 
         UserModel userModel=knowUserModel(userId);
         List<DoubtModel> doubtModel=doubtRepository.findAllByUserModel(userModel);
@@ -110,9 +102,8 @@ public class UserService {
         res.put("articlesAdded",articlesModelList1.size());
 
         res.put("ArticleList",articlesModelList);
-        res.put("numberOfCommmentsList",comments);
         res.put("doubtlist",doubtModelList);
-        res.put("noOfCorrespondingAnswers",noOfAnswer);
+
 
         return res;
     }
@@ -295,6 +286,7 @@ public class UserService {
     public Map<String,Object> login(String email, String password, String fcmtoken)
     {
         UserModel userModel=userRepository.findOneByEmail(email);
+
         Map<String,Object> res = new HashMap<>();
         if(userModel!=null)
         {
@@ -303,8 +295,11 @@ public class UserService {
                     res.put("response", "true");
                     res.put("message", "Login Successfull");
                     userModel.setLoginStatus(true);
-                    userModel.setFcmToken(fcmtoken);
+                    //userModel.setFcmToken(fcmtoken);
                     res.put("userId", userModel.getUserId());
+                    StudentModel studentModel=studentRepository.findByUserModel(userModel);
+                    res.put("deptId",studentModel.getDept_id());
+                    res.put("fname",userModel.getFname());
                     res.put("userType", userModel.getUserType());
                     return res;
                 }
@@ -397,7 +392,7 @@ public class UserService {
                     " The OTP is "+token);
             Mail mail = new Mail(from, subject, to, content);
 
-            SendGrid sg = new SendGrid("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");
+            SendGrid sg = new SendGrid("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");
             Request request = new Request();
             try {
                 request.setMethod(Method.POST);
@@ -484,11 +479,11 @@ public class UserService {
         if(articlesModel!=null) {
             if(type.equalsIgnoreCase("up")){
                 articlesModel.setLikes(articlesModel.getLikes() + 1);
-                res.put("fcmtokenresponse",sendNotification(userModel.getFcmToken(),userModel.getFname(),"liked","post"));
+//                res.put("fcmtokenresponse",sendNotification(userModel.getFcmToken(),userModel.getFname(),"liked","post"));
             }
             else if (type.equalsIgnoreCase("down")){
                 articlesModel.setLikes(articlesModel.getLikes() - 1);
-                res.put("fcmtokenresponse",sendNotification(userModel.getFcmToken(),userModel.getFname(),"disliked","post"));
+                /*res.put("fcmtokenresponse",sendNotification(userModel.getFcmToken(),userModel.getFname(),"disliked","post"));*/
             }
 
             res.put("response", true);
@@ -524,7 +519,7 @@ public class UserService {
             res.put("response", true);
             return res;
         }
-        res.put("fcmtoken",userModel.getFcmToken());
+        //res.put("fcmtoken",userModel.getFcmToken());
         res.put("response",false);
         return res;
     }
@@ -553,7 +548,7 @@ public class UserService {
             res.put("response", true);
             return res;
         }
-        res.put("fcmtoken",userModel.getFcmToken());
+       //res.put("fcmtoken",userModel.getFcmToken());
         res.put("response",false);
         return res;
     }
@@ -670,6 +665,10 @@ public class UserService {
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filepath)));
                 FileCopyUtils.copy((InputStream) mFile.getInputStream(), (OutputStream) stream);
                 stream.close();
+                String imagePath="EngBook\\src\\main\\resources\\images\\"
+                        +type+"\\"
+                        + username.replaceAll(" ", "") + "//" + fileName;
+                mresponse.put("imagePath",imagePath);
 
 
             } catch (Exception e) {
@@ -692,7 +691,12 @@ public class UserService {
         List<String> userInfo=new ArrayList<>();
         List<Integer> comments=new ArrayList<>();
         for (int i = 0; i <articlesModelList.size() ; i++) {
-         //articlesModelList.get(i).setUserModel(userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
+         if(!articlesModelList.get(i).isType())
+         {
+             articlesModelList.remove(i);
+             i--;
+             continue;
+         }
             comments.add(i,  commentRepository.findByArticleId(articlesModelList.get(i).getArticleId()));
             userInfo.add(i,userRepository.findByUserId(articlesModelList.get(i).getUserModel().getUserId()));
         }

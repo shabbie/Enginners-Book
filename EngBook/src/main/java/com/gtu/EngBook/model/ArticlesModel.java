@@ -37,6 +37,16 @@ public class ArticlesModel implements Serializable {
     @Column(name = "create_time")
     private long createTime;
 
+    @Column(name = "type")
+    private boolean type;
+
+    public boolean isType() {
+        return type;
+    }
+
+    public void setType(boolean type) {
+        this.type = type;
+    }
 
     public long getDeptId() {
         return deptId;
@@ -97,6 +107,7 @@ public class ArticlesModel implements Serializable {
     }
 
     /**
+     *
      * @param userModel
      * @param deptId
      * @param articleId
@@ -105,8 +116,9 @@ public class ArticlesModel implements Serializable {
      * @param articleText
      * @param articleImage
      * @param createTime
+     * @param type
      */
-    public ArticlesModel(UserModel userModel, long deptId, long articleId, long likes, int articleType, String articleText, String articleImage, long createTime) {
+    public ArticlesModel(UserModel userModel, long deptId, long articleId, long likes, int articleType, String articleText, String articleImage, long createTime, boolean type) {
         this.userModel = userModel;
         this.deptId = deptId;
         this.articleId = articleId;
@@ -115,6 +127,7 @@ public class ArticlesModel implements Serializable {
         this.articleText = articleText;
         this.articleImage = articleImage;
         this.createTime = createTime;
+        this.type = type;
     }
 
     public void setArticleImage(String articleImage) {
